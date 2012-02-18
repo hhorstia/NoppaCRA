@@ -1,0 +1,9 @@
+An application for Aalto University's Noppa course portal.
+It is a mobile web application that recommends which courses a student can take
+next period base on the user's data of previous courses and other students
+perceptions of the course. The application will be designed to be usable on a
+modern smart phone using just the device's own web browser.
+
+
+All source code to src/ directory.
+All documentation to docs/ directory.
