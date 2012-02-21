@@ -15,27 +15,61 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
 
   <script src="js/libs/modernizr-2.5.3.min.js"></script>
-  <script src="js/libs/bootstrap.min.js"></script>
 </head>
 <body>
-  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-  <header>
-
-  </header>
-  <div role="main">
-
+  <div class="container">
+    <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+    <header class="row navbar">
+      <div class="span12 navbar-inner">
+        <div class="container">
+          
+          <a class="brand" href="#">Course suggestions</a>
+     
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#recommendations">Recommendations</a></li>
+              <li><a href="#own_courses">Own courses</a></li>
+            </ul>
+          </div>
+     
+        </div>
+      </div>
+    </header>
+    <div role="main">
+      
+      <div id="recommendations">
+        <div class="course_item">
+          <div class="row">
+            <h2 class="span2">T-111.5360</h2>
+            <div class="span2">Stars here</div>
+          </div>
+          <div class="row">
+            <p class="span8">Some information about this course</p>
+            <div class="span4"></div>
+          </div>
+          <div class="row">
+            <div class="span2">
+              <a href="#">Add to own courses</a>
+            </div>
+            <div class="span2">
+              <a href="#">Remove from recommendations</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+    <footer class="row">
+  
+    </footer>
   </div>
-  <footer>
-
-  </footer>
-
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+  <script src="js/libs/bootstrap.min.js"></script>
 
   <script src="js/plugins.js"></script>
   <script src="js/script.js"></script>
-
   <script>
     var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
