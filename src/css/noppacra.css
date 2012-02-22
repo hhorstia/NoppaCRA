@@ -1,0 +1,16 @@
+body {
+    height: 100%;
+}
+footer {
+    position: fixed;
+    bottom: 0%;
+}
+.stars {
+    padding: 0.2em;
+}
+
+.stars {
+    position: relative;
+    top: 5px;
+    left: 6px;
+}
