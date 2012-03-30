@@ -31,10 +31,20 @@ var NoppaCRA = {
 				NoppaCRA.testGlobal();
 			}
 			NoppaCRA.getRecommendations();
-			NoppaCRA.initRecommendationView();
+			NoppaCRA.initView();
 			NoppaCRA.bindHashChange();
+			
+			$('.nav-tabs').tab();
+			$('.nav-tabs a').on('show', NoppaCRA.show_tab);
 		});
 
+	},
+	
+	/* event handler for when a tab is shown*/
+	show_tab: function(evt) {
+		$('' + evt.currentTarget.hash).show();
+		$('' + evt.relatedTarget.hash).hide();
+		
 	},
 
 	/* Set and get the base URL. */
@@ -125,27 +135,34 @@ var NoppaCRA = {
 
 	},
 	
-	initRecommendationView : function() {
-
-		$('.course-item').live('click touchstart', function() {
-			$('.course-item').removeClass('selected');
-			$(this).addClass('selected');
-		});
+	initView : function() {
+		
+		var hash = $(window)[0].location.hash;
+		if(hash === '#recommendations') {
+			$('.nav-tabs a[href=#recommendations]').tab('show');
+			$('.course-item').live('click touchstart', function() {
+				$('.course-item').removeClass('selected');
+				$(this).addClass('selected');
+			});	
+		} else if(hash === '#own_courses') {
+			$( '.nav-tabs a[href=#own_courses]' ).tab('show');
+			//the tab show does not fire an event for some reason
+			$( '#own_courses' ).show();
+			$( '#recommendations' ).hide();
+		}
 
 	},
 	
 	bindHashChange : function() {
-	
+		
 		$(window).bind('hashchange', function(event) {
 
 			if (location.hash == '#own_courses') {
 				NoppaCRA.debug ? console.log('Own courses selected.') : '';
-				$('#recommendations').hide();
-				$('#own_courses').show();
-			} else if (location.hash = '#recommendations') {
+				$('.nav-tabs a[href=#own_courses]').tab('show');
+			} else if (location.hash == '#recommendations') {
 				NoppaCRA.debug ? console.log('Recommendations selected.') : '';
-				$('#own_courses').hide();
-				$('#recommendations').show();
+				$('.nav-tabs a[href=#recommendations]').tab('show');
 			}
 
 		});
