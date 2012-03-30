@@ -1,5 +1,7 @@
 body {
     height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 footer {
     position: fixed;
@@ -22,7 +24,7 @@ footer {
 .course-item {
 	border: 1px dashed white;
 	border-radius: 5px;
-	padding: 0 5px 5px 5px;
+	padding: 0 10px 5px 10px;
 }
 
 .course-item.selected {
