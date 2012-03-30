@@ -32,6 +32,7 @@ var NoppaCRA = {
 			}
 			NoppaCRA.getRecommendations();
 			NoppaCRA.initRecommendationView();
+			NoppaCRA.bindHashChange();
 		});
 
 	},
@@ -131,6 +132,20 @@ var NoppaCRA = {
 			$(this).addClass('selected');
 		});
 
+	},
+	
+	bindHashChange : function() {
+	
+		$(window).bind('hashchange', function(event) {
+
+			if (location.hash == '#own_courses') {
+				NoppaCRA.debug ? console.log('Own courses selected.') : '';
+			} else if (location.hash = '#recommendations') {
+				NoppaCRA.debug ? console.log('Recommendations selected.') : '';
+			}
+
+		});
+	
 	}
 
 }
