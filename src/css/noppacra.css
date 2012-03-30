@@ -60,3 +60,7 @@ footer {
 .login-title {
 	margin-bottom: 10px;
 }
+
+#own_courses {
+	display: none;
+}

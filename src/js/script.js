@@ -140,8 +140,12 @@ var NoppaCRA = {
 
 			if (location.hash == '#own_courses') {
 				NoppaCRA.debug ? console.log('Own courses selected.') : '';
+				$('#recommendations').hide();
+				$('#own_courses').show();
 			} else if (location.hash = '#recommendations') {
 				NoppaCRA.debug ? console.log('Recommendations selected.') : '';
+				$('#own_courses').hide();
+				$('#recommendations').show();
 			}
 
 		});
