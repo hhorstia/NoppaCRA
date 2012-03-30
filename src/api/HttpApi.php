@@ -26,6 +26,15 @@ Class HttpApi {
 		return $value;
 	}
 	
+	public static function getCourseRecommendations($sort, $limit, $offset, $filters) {
+		$value = array();
+		$courses = TestDatabase::getCourseRecommendations($sort, $limit, $offset);
+		foreach ($courses as $course) {
+			array_push($value, $course);
+		}
+		return $value;
+	}
+	
 	public static function getCourseReviews($id) {
 		$value = array();
 		$reviews = TestDatabase::getCourseReviews($id);
@@ -73,6 +82,12 @@ Class HttpApi {
 					} else {
 						$response['valid'] = 0;
 					}
+					break;
+				case 'getCourseRecommendations':
+					$response['sort'] = $_POST['sort'] ? $_POST['sort'] : 'code';
+					$response['limit'] = $_POST['limit'] ? $_POST['limit'] : 10;
+					$response['offset'] = $_POST['offset'] ? $_POST['offset'] : 0;
+					$response['value'] = HttpApi::getCourseRecommendations($response['sort'], $response['limit'], $response['offset'], $response['filters']);
 					break;
 				case 'getCourseReviews':
 					if (isset($_POST['id'])) {

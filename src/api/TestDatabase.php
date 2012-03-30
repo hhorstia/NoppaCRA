@@ -75,6 +75,30 @@ Class TestDatabase {
 		}
 	}
 	
+	public static function getCourseRecommendations($sort, $limit, $offset, $filters) {
+		switch ($sort) {
+			case 'id':
+				$sort = 'id';
+				break;
+			case 'name':
+				$sort = 'nimi';
+				break;
+			case 'credits':
+				$sort = 'laajuus';
+				break;
+			case 'period':
+				$sort = 'periodi';
+				break;	
+			default:
+				$sort = 'koodi';
+		}
+		$db = new \SQLiteDatabase('../db/NoppaCRA.sqlite', 0666);
+		$query = 'SELECT * FROM kurssi ORDER BY ' . $sort . ' DESC LIMIT ' . intval($offset) . ',' . intval($limit);
+		$results = $db->arrayQuery($query, SQLITE_ASSOC);
+		$db = NULL;
+		return $results;
+	}
+	
 	public static function getCourseReviews($id) {
 		$db = new \SQLiteDatabase('../db/NoppaCRA.sqlite', 0666);
 		$query = 'SELECT * FROM arviot WHERE kurssi_id=' . intval($id);

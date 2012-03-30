@@ -30,6 +30,8 @@ var NoppaCRA = {
 				NoppaCRA.testHttpAPI();
 				NoppaCRA.testGlobal();
 			}
+			NoppaCRA.getRecommendations();
+			NoppaCRA.initRecommendationView();
 		});
 
 	},
@@ -68,6 +70,12 @@ var NoppaCRA = {
 			}, "json"
 		);
 		
+		$.post("api/", { method: "getCourseRecommendations", sort: 'name', limit: 10, offset: 0 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
 		$.post("api/", { method: "getCourseReviews", id: 2 },
 			function(data) {
 				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
@@ -92,6 +100,33 @@ var NoppaCRA = {
 	testGlobal : function() {
 
 		$("input[name='star']").rating();
+
+	},
+	
+	getRecommendations : function(options) {
+
+		$.post("api/", { method: "getCourseRecommendations", sort: 'name', limit: 10, offset: 0 },
+			function(data) {
+				if (data.valid) {
+					$.each(data.value, function() {
+						var courseItem = $('.course-item.prototype').clone();
+						courseItem.removeClass('prototype').find('.course-name').html(this.nimi);
+						courseItem.find('.course-code').html(this.koodi);
+						$('.course-item.prototype').after(courseItem);
+						//id, koodi, nimi, laajuus, sisalto, periodi, aktiivinen
+					});
+				}
+			}, "json"
+		);
+
+	},
+	
+	initRecommendationView : function() {
+
+		$('.course-item').live('click touchstart', function() {
+			$('.course-item').removeClass('selected');
+			$(this).addClass('selected');
+		});
 
 	}
 

@@ -10,7 +10,42 @@ footer {
 }
 
 .stars {
-    position: relative;
-    top: 5px;
-    left: 6px;
+	float: left;
+	margin-top: -4px;
+	margin-left: 5px;
+}
+
+.prototype {
+    display: none;
+}
+
+.course-item {
+	border: 1px dashed white;
+	border-radius: 5px;
+	padding: 0 5px 5px 5px;
+}
+
+.course-item.selected {
+	border: 1px dashed #ccc;
+	background: #eee;
+}
+
+.course-header h2 {
+	font-size: 18px;
+	white-space: nowrap;
+}
+
+.course-code {
+	float: left;
+	clear: left;
+	font-weight: bold;
+}
+
+.course-details {
+	display: none !important;
+}
+
+.course-description {
+	margin-left: 0;
+	margin-top: 4px;
 }
