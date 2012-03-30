@@ -43,6 +43,11 @@ footer {
 
 .course-details {
 	display: none !important;
+	padding-top: 4px;
+}
+
+.course-item.selected .course-details {
+	display: block !important;
 }
 
 .course-description {

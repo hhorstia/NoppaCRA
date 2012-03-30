@@ -112,8 +112,11 @@ var NoppaCRA = {
 						var courseItem = $('.course-item.prototype').clone();
 						courseItem.removeClass('prototype').find('.course-name').html(this.nimi);
 						courseItem.find('.course-code').html(this.koodi);
+						courseItem.find('.course-period').html(this.periodi);
+						courseItem.find('.course-description').html(this.sisalto);
+						//courseItem.find('.stars').children('input').rating('select', 1);
 						$('.course-item.prototype').after(courseItem);
-						//id, koodi, nimi, laajuus, sisalto, periodi, aktiivinen
+						// Unused details: this.id, this.laajuus, this.aktiivinen, this.arvio.
 					});
 				}
 			}, "json"

@@ -30,6 +30,7 @@ Class HttpApi {
 		$value = array();
 		$courses = TestDatabase::getCourseRecommendations($sort, $limit, $offset);
 		foreach ($courses as $course) {
+			$course['arvio'] = TestDatabase::getCourseRating($course['id']);
 			array_push($value, $course);
 		}
 		return $value;
