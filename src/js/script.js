@@ -30,6 +30,8 @@ var NoppaCRA = {
 				NoppaCRA.testHttpAPI();
 				NoppaCRA.testGlobal();
 			}
+			NoppaCRA.getRecommendations();
+			NoppaCRA.initRecommendationView();
 		});
 
 	},
@@ -50,7 +52,43 @@ var NoppaCRA = {
 	/* Test the HTTP API of the service. */
 	testHttpAPI : function() {
 
-		$.post("api/", { method: "getCourseRating", id: 0 },
+		$.post("api/", { method: "getCourse", id: 1 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getCourses", sort: 'name', limit: 10, offset: 0 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getUserCourses", active: 1 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' with active status ' + data.active + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getCourseRecommendations", sort: 'name', limit: 10, offset: 0 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getCourseReviews", id: 2 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getUserCourseReview", id: 2 },
+			function(data) {
+				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
+			}, "json"
+		);
+		
+		$.post("api/", { method: "getCourseRating", id: 2 },
 			function(data) {
 				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
 			}, "json"
