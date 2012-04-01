@@ -3,16 +3,20 @@ body {
     margin: 0 !important;
     padding: 0 !important;
 }
+
+a:visited {
+	color: #005580;
+	text-decoration: underline;
+}
+
 footer {
     position: fixed;
-    bottom: 0%;
-}
-.stars {
-    padding: 0.2em;
+    bottom: 0;
 }
 
 .stars {
 	float: left;
+    padding: 0.2em;
 	margin-top: -4px;
 	margin-left: 5px;
 }
@@ -63,4 +67,9 @@ footer {
 
 #own_courses {
 	display: none;
+}
+
+.sort, .filter {
+	background: white;
+	line-height: 2em;
 }

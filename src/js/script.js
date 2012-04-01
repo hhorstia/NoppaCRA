@@ -31,6 +31,7 @@ var NoppaCRA = {
 				NoppaCRA.testGlobal();
 			}
 			NoppaCRA.getRecommendations();
+			NoppaCRA.getOwnCourses();
 			NoppaCRA.initView();
 			NoppaCRA.bindHashChange();
 			
@@ -126,13 +127,34 @@ var NoppaCRA = {
 						courseItem.find('.course-period').html(this.periodi);
 						courseItem.find('.course-description').html(this.sisalto);
 						//courseItem.find('.stars').children('input').rating('select', 1);
-						$('.course-item.prototype').after(courseItem);
+						$('#recommendations').append(courseItem);
 						// Unused details: this.id, this.laajuus, this.aktiivinen, this.arvio.
 					});
 				}
 			}, "json"
 		);
 
+	},
+	
+	getOwnCourses : function(options) {
+	
+		$.post("api/", { method: "getUserCourses", active: 1 },
+			function(data) {
+				if (data.valid) {
+					$.each(data.value, function() {
+						var courseItem = $('.course-item.prototype').clone();
+						courseItem.removeClass('prototype').find('.course-name').html(this.nimi);
+						courseItem.find('.course-code').html(this.koodi);
+						courseItem.find('.course-period').html(this.periodi);
+						courseItem.find('.course-description').html(this.sisalto);
+						//courseItem.find('.stars').children('input').rating('select', 1);
+						$('#own_courses').append(courseItem);
+						// Unused details: this.id, this.laajuus, this.aktiivinen, this.arvio.
+					});
+				}
+			}, "json"
+		);
+	
 	},
 	
 	initView : function() {
