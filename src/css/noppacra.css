@@ -67,8 +67,21 @@ footer {
 	margin-top: 4px;
 }
 
+.login-form {
+	margin-left: 0;
+}
+
 .login-title {
-	margin-bottom: 10px;
+	margin-top: 15px !important;
+	margin-bottom: 15px !important;
+}
+
+#login {
+	margin-top: 20px;
+}
+
+#login div {
+	margin-left: 0;
 }
 
 #own_courses {
@@ -78,4 +91,8 @@ footer {
 .sort, .filter {
 	background: white;
 	line-height: 2em;
+}
+
+.alert {
+	margin-bottom: 0;
 }
