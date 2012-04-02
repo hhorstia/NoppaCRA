@@ -115,7 +115,7 @@ var NoppaCRA = {
 	
 	getRecommendations : function(options) {
 
-		$.post("api/", { method: "getCourseRecommendations", sort: 'name', limit: 10, offset: 0 },
+		$.post("api/", { method: "getCourseRecommendations", sort: 'koodi', limit: 100, offset: 800 },
 			function(data) {
 				if (data.valid) {
 					$.each(data.value, function() {
