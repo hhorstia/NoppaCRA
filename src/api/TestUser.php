@@ -11,6 +11,10 @@ Class TestUser {
 	public static function getID() {
 		return 1;
 	}
+	
+	public static function authenticate($username, $password) {
+		return true;
+	}
 
 }
 

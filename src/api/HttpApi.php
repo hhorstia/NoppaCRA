@@ -3,6 +3,10 @@
 namespace NoppaCRA;
 
 Class HttpApi {
+
+	public static function authenticateUser($username, $password) {
+		return TestUser::authenticate($username, $password);
+	}
 	
 	public static function getCourse($id) {
 		return NoppaDatabase::getCourse($id);
@@ -62,6 +66,15 @@ Class HttpApi {
 			$response['valid'] = 1;
 			
 			switch ($method) {
+				case 'authenticateUser':
+					if (isset($_POST['username']) && isset($_POST['password'])) {
+						$response['username'] = $_POST['username'];
+						$response['password'] = $_POST['password'];
+						$response['value'] = HttpApi::authenticateUser($response['username'], $response['password']);
+					} else {
+						$response['valid'] = 0;
+					}
+					break;
 				case 'getCourse':
 					if (isset($_POST['id'])) {
 						$response['id'] = $_POST['id'];

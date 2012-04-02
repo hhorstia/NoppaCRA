@@ -207,6 +207,18 @@ var NoppaCRA = {
 		$('#login').submit(function() {
 		
 			NoppaCRA.debug ? console.log('>>> Login form submitted.') : '';
+			
+			$.post("api/", { method: "authenticateUser", username: $('#username').val(), password: $('#password').val() },
+				function(data) {
+					if (data.valid) {
+						NoppaCRA.debug ? console.log(data) : '';
+						if (data.value) {
+							window.location = './';
+						}
+					}
+				}, "json"
+			);
+			
 			return false;
 		
 		});
