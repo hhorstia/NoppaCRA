@@ -26,7 +26,7 @@ var NoppaCRA = {
 		$(document).ready(function() {
 			NoppaCRA.setBaseURL();
 			if (NoppaCRA.debug) {
-				console.log('NoppaCRA JS loaded.');
+				console.log('>>> NoppaCRA JS loaded.');
 				NoppaCRA.testHttpAPI();
 				NoppaCRA.testGlobal();
 			}
@@ -157,6 +157,15 @@ var NoppaCRA = {
 	
 	initView : function() {
 		
+		var view = $('meta[name=view]').attr("content");
+		
+		switch(view) {
+			case 'login':
+				NoppaCRA.debug ? console.log('>>> Login view requested.') : '';
+				NoppaCRA.initLoginView();
+				break;
+		}
+		
 		var hash = $(window)[0].location.hash;
 		$('.course-item').live('click touchstart', function() {
 			if ($(this).hasClass('selected')) {
@@ -189,6 +198,17 @@ var NoppaCRA = {
 				$('.nav-tabs a[href=#recommendations]').tab('show');
 			}
 
+		});
+	
+	},
+	
+	initLoginView : function() {
+	
+		$('#login').submit(function() {
+		
+			NoppaCRA.debug ? console.log('>>> Login form submitted.') : '';
+			return false;
+		
 		});
 	
 	}
