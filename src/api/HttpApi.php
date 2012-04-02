@@ -5,12 +5,12 @@ namespace NoppaCRA;
 Class HttpApi {
 	
 	public static function getCourse($id) {
-		return TestDatabase::getCourse($id);
+		return NoppaDatabase::getCourse($id);
 	}
 	
 	public static function getCourses($sort, $limit, $offset) {
 		$value = array();
-		$courses = TestDatabase::getCourses($sort, $limit, $offset);
+		$courses = NoppaDatabase::getCourses($sort, $limit, $offset);
 		foreach ($courses as $course) {
 			array_push($value, $course);
 		}
@@ -19,7 +19,7 @@ Class HttpApi {
 	
 	public static function getUserCourses($active) {
 		$value = array();
-		$courses = TestDatabase::getUserCourses($active);
+		$courses = NoppaDatabase::getUserCourses($active);
 		foreach ($courses as $course) {
 			array_push($value, $course);
 		}
@@ -28,9 +28,9 @@ Class HttpApi {
 	
 	public static function getCourseRecommendations($sort, $limit, $offset, $filters) {
 		$value = array();
-		$courses = TestDatabase::getCourseRecommendations($sort, $limit, $offset);
+		$courses = NoppaDatabase::getCourseRecommendations($sort, $limit, $offset);
 		foreach ($courses as $course) {
-			$course['arvio'] = TestDatabase::getCourseRating($course['id']);
+			$course['arvio'] = NoppaDatabase::getCourseRating($course['id']);
 			array_push($value, $course);
 		}
 		return $value;
@@ -38,7 +38,7 @@ Class HttpApi {
 	
 	public static function getCourseReviews($id) {
 		$value = array();
-		$reviews = TestDatabase::getCourseReviews($id);
+		$reviews = NoppaDatabase::getCourseReviews($id);
 		foreach ($reviews as $review) {
 			array_push($value, $review);
 		}
@@ -46,11 +46,11 @@ Class HttpApi {
 	}
 	
 	public static function getUserCourseReview($id) {
-		return TestDatabase::getUserCourseReview($id);
+		return NoppaDatabase::getUserCourseReview($id);
 	}
 	
 	public static function getCourseRating($id) {
-		return TestDatabase::getCourseRating($id);
+		return NoppaDatabase::getCourseRating($id);
 	}
 	
 	public static function resolve($method) {
@@ -88,6 +88,7 @@ Class HttpApi {
 					$response['sort'] = $_POST['sort'] ? $_POST['sort'] : 'code';
 					$response['limit'] = $_POST['limit'] ? $_POST['limit'] : 10;
 					$response['offset'] = $_POST['offset'] ? $_POST['offset'] : 0;
+					$response['filters'] = $_POST['filters'] ? $_POST['filters'] : 0;
 					$response['value'] = HttpApi::getCourseRecommendations($response['sort'], $response['limit'], $response['offset'], $response['filters']);
 					break;
 				case 'getCourseReviews':
