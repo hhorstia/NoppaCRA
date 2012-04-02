@@ -42,7 +42,9 @@ footer {
 
 .course-header h2 {
 	font-size: 18px;
-	white-space: nowrap;
+	line-height: 1em;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
 }
 
 .course-code {
