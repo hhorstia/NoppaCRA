@@ -171,9 +171,9 @@ var NoppaCRA = {
 		var hash = $(window)[0].location.hash;
 		$('.course-item').live('click touchstart', function() {
 			if ($(this).hasClass('selected')) {
-				$('.course-item').removeClass('selected');
+				$('.selected').removeClass('selected');
 			} else {
-				$('.course-item').removeClass('selected');
+				$('.selected').removeClass('selected');
 				$(this).addClass('selected');
 			}
 		});	
