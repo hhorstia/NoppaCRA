@@ -64,6 +64,7 @@ var NoppaCRA = {
 	/* Test the HTTP API of the service. */
 	testHttpAPI : function() {
 
+		/*
 		$.post("api/", { method: "getCourse", id: 1 },
 			function(data) {
 				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
@@ -105,6 +106,7 @@ var NoppaCRA = {
 				console.log('Testing HTTP API: method ' + data.method + ' with id ' + data.id + ' returns ' + data.value + '.');
 			}, "json"
 		);
+		*/
 
 	},
 
@@ -115,7 +117,7 @@ var NoppaCRA = {
 	
 	getRecommendations : function(options) {
 
-		$.post("api/", { method: "getCourseRecommendations", sort: 'koodi', limit: 100, offset: 800 },
+		$.post("api/", { method: "getCourseRecommendations", sort: 'koodi', limit: 50, offset: 800 },
 			function(data) {
 				if (data.valid) {
 					$.each(data.value, function() {
