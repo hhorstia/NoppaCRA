@@ -208,16 +208,20 @@ var NoppaCRA = {
 		
 			NoppaCRA.debug ? console.log('>>> Login form submitted.') : '';
 			
-			$.post("api/", { method: "authenticateUser", username: $('#username').val(), password: $('#password').val() },
-				function(data) {
-					if (data.valid) {
-						NoppaCRA.debug ? console.log(data) : '';
-						if (data.value) {
-							window.location = './';
+			if ($('#username').val() != '' && $('#password').val() != '') {
+				$.post("api/", { method: "authenticateUser", username: $('#username').val(), password: $('#password').val() },
+					function(data) {
+						if (data.valid) {
+							NoppaCRA.debug ? console.log(data) : '';
+							if (data.value) {
+								window.location = './';
+							}
 						}
-					}
-				}, "json"
-			);
+					}, "json"
+				);
+			} else {
+				$('.login-error').css('display', 'block !important');
+			}
 			
 			return false;
 		

@@ -69,6 +69,7 @@ footer {
 
 .login-form {
 	margin-left: 0;
+	margin-bottom: 20px;
 }
 
 .login-title {
@@ -76,8 +77,17 @@ footer {
 	margin-bottom: 15px !important;
 }
 
+.login-title h2 {
+	line-height: 1.2em;
+}
+
+.login-error {
+	display: none !important;
+}
+
 #login {
 	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 #login div {
@@ -94,5 +104,9 @@ footer {
 }
 
 .alert {
+	margin-bottom: 0;
+}
+
+.alert p {
 	margin-bottom: 0;
 }
