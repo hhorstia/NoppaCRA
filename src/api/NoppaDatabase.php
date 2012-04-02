@@ -47,17 +47,18 @@ Class NoppaDatabase {
 			$db = new \SQLite3('../../noppa_scrape/noppa.sql');
 			$query = 'SELECT * FROM omat_kurssit WHERE henkilo_id=' . intval(TestUser::getID()) . ' AND aktiivinen=' . intval($active);
 			$courses = $db->query($query);
-			foreach ($courses as $course) {
-				$query = 'SELECT * FROM kurssi WHERE id=' . intval($course['kurssi_id']);
-				$temp = $db->query($query);
-				if ($temp[0]) array_push($results, $temp[0]);
-			}
-			$final = array();
+
 			while ($row = $courses->fetchArray()) {
-				array_push($final, $row);
+				$query = 'SELECT * FROM kurssi WHERE id=' . intval($row['kurssi_id']);
+				$temp = $db->query($query)->fetchArray();
+
+				$results[] = $temp;
 			}
+
+			$final = array();
+			
 			$db = NULL;
-			return $final;
+			return $results;
 		} else {
 			return false;
 		}
