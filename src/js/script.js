@@ -159,12 +159,16 @@ var NoppaCRA = {
 		
 		var hash = $(window)[0].location.hash;
 		$('.course-item').live('click touchstart', function() {
-			$('.course-item').removeClass('selected');
-			$(this).addClass('selected');
+			if ($(this).hasClass('selected')) {
+				$('.course-item').removeClass('selected');
+			} else {
+				$('.course-item').removeClass('selected');
+				$(this).addClass('selected');
+			}
 		});	
-		if(hash === '#recommendations') {
+		if (hash === '#recommendations') {
 			$('.nav-tabs a[href=#recommendations]').tab('show');
-		} else if(hash === '#own_courses') {
+		} else if (hash === '#own_courses') {
 			$( '.nav-tabs a[href=#own_courses]' ).tab('show');
 			//the tab show does not fire an event for some reason
 			$( '#own_courses' ).show();
