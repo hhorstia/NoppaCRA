@@ -11,6 +11,7 @@ var NoppaCRA = {
 	baseURL			: '',
 	debug			: true,
 	NoppaCRA		: this,
+	touchClick		: false,
 
 	/* Global functions of NoppaCRA. */
 
@@ -169,13 +170,22 @@ var NoppaCRA = {
 		}
 		
 		var hash = $(window)[0].location.hash;
-		$('.course-item').live('click touchstart', function() {
-			if ($(this).hasClass('selected')) {
-				$('.selected').removeClass('selected');
-			} else {
-				$('.selected').removeClass('selected');
-				$(this).addClass('selected');
+		$('.course-item').live('touchstart', function() {
+			NoppaCRA.touchClick = true;
+		});
+		$('.course-item').live('touchmove', function() {
+			NoppaCRA.touchClick = false;
+		});
+		$('.course-item').live('click touchend', function(event) {
+			if (NoppaCRA.touchClick || event.type == 'click') {
+				if ($(this).hasClass('selected')) {
+					$('.selected').removeClass('selected');
+				} else {
+					$('.selected').removeClass('selected');
+					$(this).addClass('selected');
+				}
 			}
+			NoppaCRA.touchClick = false;
 		});	
 		if (hash === '#recommendations') {
 			$('.nav-tabs a[href=#recommendations]').tab('show');
