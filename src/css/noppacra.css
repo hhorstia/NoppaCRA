@@ -9,14 +9,18 @@ a:visited {
 	text-decoration: underline;
 }
 
+.content {
+    margin-bottom: 2em;
+}
 footer {
+    display: none;	
     position: fixed;
     bottom: 0;
 }
 
 .stars {
 	float: left;
-    padding: 0.2em;
+	padding: 0.2em;
 	margin-top: -4px;
 	margin-left: 5px;
 }
