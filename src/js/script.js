@@ -110,9 +110,7 @@ var NoppaCRA = {
 
 	/* Global test function of the service. */
 	testGlobal : function() {
-
-		$("input[name='star']").rating();
-
+		$("input.star").rating();
 	},
 	
 	getRecommendations : function(options) {
@@ -160,12 +158,12 @@ var NoppaCRA = {
 	initView : function() {
 		
 		var hash = $(window)[0].location.hash;
+		$('.course-item').live('click touchstart', function() {
+			$('.course-item').removeClass('selected');
+			$(this).addClass('selected');
+		});	
 		if(hash === '#recommendations') {
 			$('.nav-tabs a[href=#recommendations]').tab('show');
-			$('.course-item').live('click touchstart', function() {
-				$('.course-item').removeClass('selected');
-				$(this).addClass('selected');
-			});	
 		} else if(hash === '#own_courses') {
 			$( '.nav-tabs a[href=#own_courses]' ).tab('show');
 			//the tab show does not fire an event for some reason
