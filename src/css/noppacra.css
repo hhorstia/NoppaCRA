@@ -9,6 +9,14 @@ a:visited {
 	text-decoration: underline;
 }
 
+.nav li a {
+	color: #005580 !important;
+}
+
+.nav li.active a {
+	color: #444444 !important;
+}
+
 .content {
     margin-bottom: 2em;
 }
