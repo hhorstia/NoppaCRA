@@ -5,7 +5,7 @@ namespace NoppaCRA;
 Class NoppaDatabase {
 	
 	public static function getCourse($id) {
-		$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+		$db = new \SQLite3('../scrape/noppa.sql');
 		$query = 'SELECT * FROM kurssi WHERE id=' . intval($id) . ' ORDER BY koodi DESC';
 		$results = $db->query($query);
 		$results = $results->fetchArray();
@@ -30,7 +30,7 @@ Class NoppaDatabase {
 			default:
 				$sort = 'koodi';
 		}
-		$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+		$db = new \SQLite3('../scrape/noppa.sql');
 		$query = 'SELECT * FROM kurssi ORDER BY ' . $sort . ' DESC LIMIT ' . intval($offset) . ',' . intval($limit);
 		$results = $db->query($query);
 		$final = array();
@@ -44,7 +44,7 @@ Class NoppaDatabase {
 	public static function getUserCourses($active) {
 		if (TestUser::isAuthenticated()) {
 			$results = array();
-			$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+			$db = new \SQLite3('../scrape/noppa.sql');
 			$query = 'SELECT * FROM omat_kurssit WHERE henkilo_id=' . intval(TestUser::getID()) . ' AND aktiivinen=' . intval($active);
 			$courses = $db->query($query);
 
@@ -81,7 +81,7 @@ Class NoppaDatabase {
 			default:
 				$sort = 'koodi';
 		}
-		$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+		$db = new \SQLite3('../scrape/noppa.sql');
 		$query = 'SELECT * FROM kurssi ORDER BY ' . $sort . ' DESC LIMIT ' . intval($offset) . ',' . intval($limit);
 		$results = $db->query($query);
 		$final = array();
@@ -93,7 +93,7 @@ Class NoppaDatabase {
 	}
 	
 	public static function getCourseReviews($id) {
-		$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+		$db = new \SQLite3('../scrape/noppa.sql');
 		$query = 'SELECT * FROM arviot WHERE kurssi_id=' . intval($id);
 		$results = $db->query($query);
 		$final = array();
@@ -107,7 +107,7 @@ Class NoppaDatabase {
 	public static function getUserCourseReview($id) {
 		if (TestUser::isAuthenticated()) {
 			$results = array();
-			$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+			$db = new \SQLite3('../scrape/noppa.sql');
 			$query = 'SELECT * FROM arviot WHERE henkilo_id=' . intval(TestUser::getID()) . ' AND kurssi_id=' . intval($id);
 			$review = $db->query($query);
 			$results = $review->fetchArray();
@@ -119,7 +119,7 @@ Class NoppaDatabase {
 	}
 	
 	public static function getCourseRating($id) {
-		$db = new \SQLite3('../../noppa_scrape/noppa.sql');
+		$db = new \SQLite3('../scrape/noppa.sql');
 		$query = 'SELECT * FROM arviot WHERE kurssi_id=' . intval($id);
 		$reviews = $db->query($query);
 		$final = array();
