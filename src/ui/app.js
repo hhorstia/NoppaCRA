@@ -9,7 +9,8 @@ Ext.application({
 
     requires: [
         'Ext.MessageBox',
-        'Ext.Ajax'
+        'Ext.TitleBar',
+        'Ext.Ajax',
     ],
 
     views: ['Main'],
@@ -62,7 +63,7 @@ Ext.application({
                 $.each($.parseJSON(response.responseText), function(key, val) {
                 	if (key == 'value') {
                 		console.log(val);
-                		this.add({html: 'test'});
+                		//this.add({html: 'test'});
                 	}
                 });
             }
