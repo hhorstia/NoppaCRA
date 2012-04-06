@@ -8,9 +8,6 @@ import re
 class Noppa(View):
     
     def get(self, request, faculty = '', department = '', course = ''):
-        print faculty
-        print department
-        print course
         
         noppa_base_url = "https://noppa.aalto.fi/noppa/"        
         response_dict = {}
