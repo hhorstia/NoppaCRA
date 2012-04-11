@@ -1,16 +1,16 @@
 from django.conf.urls import patterns, include, url
-from views import Noppa
+from views import Noppa, Relevancy
 
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'api.views.home', name='home'),
-    (r'^$',
+    (r'^noppa/$',
                 Noppa.as_view()),
-    (r'^(?P<faculty>@?[-+_\w\.]+)/$',
+    (r'^noppa/(?P<faculty>@?[-+_\w\.]+)/$',
                 Noppa.as_view()),
-    (r'^(?P<faculty>@?[-+_\w\.]+)/(?P<department>@?[-+_\w]+)/$',
+    (r'^noppa/(?P<faculty>@?[-+_\w\.]+)/(?P<department>@?[-+_\w]+)/$',
                 Noppa.as_view()),
-    (r'^(?P<faculty>@?[-+_\w\.]+)/(?P<department>@?[-+_\w]+)/(?P<course>@?[-+_\.\w]+)/$',
+    (r'^noppa/(?P<faculty>@?[-+_\w\.]+)/(?P<department>@?[-+_\w]+)/(?P<course>@?[-+_\.\w]+)/$',
                 Noppa.as_view()),
 
     # Uncomment the admin/doc line below to enable admin documentation:

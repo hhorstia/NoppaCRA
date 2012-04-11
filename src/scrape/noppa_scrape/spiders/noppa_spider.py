@@ -2,9 +2,7 @@ from scrapy.spider import BaseSpider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from urlparse import urljoin
-from items import FacultyItem, DepartmentItem, CourseItem, CourseOverviewItem
-from items import ItemLoader
-from items import DateField
+from items import CourseLinkItem
 
 
 class NoppaSpider(BaseSpider):
