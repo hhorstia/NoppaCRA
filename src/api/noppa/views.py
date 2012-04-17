@@ -5,6 +5,7 @@ from urllib2 import urlopen
 from models import Evaluation
 from django.db.models import Avg
 import json
+import re
 
 class Noppa(View):
     
@@ -135,3 +136,56 @@ class Noppa(View):
         
         return HttpResponse('evaluation done')
         
+class Node(View):
+    
+    def get(self, request, course = ''):
+        soup = BeautifulSoup(urlopen("https://noppa.aalto.fi/noppa/kurssi/%s/esite" % course),
+                             from_encoding="utf-8")
+        
+        anchors = soup.find_all('a')
+        json_dict = {
+            "name": course,
+            "children": []
+        }
+        regexp = re.compile('/kurssi/')
+        fd_regexp = re.compile('/kurssit/')
+        regexp_course = re.compile(course)
+        for a in anchors:
+            link = a.get('href')
+            if regexp.search(link) and not regexp_course.search(link):
+                json_dict['children'].append({
+                    'link': link,
+                    'name': link.split('/')[-1],
+                    'type': 'course'
+                    })
+            elif fd_regexp.search(link):
+                name = link.split('/')[-1]
+                if name != 'kurssit' and name != '':
+                    
+                    if len(link.split('/')) == 4:
+                        json_dict['children'].append({
+                            'link': 'https://noppa.aalto.fi%s' % link,
+                            'name': link.split('/')[-1],
+                            'type': 'faculty'
+                            })
+                    else:
+                        json_dict['children'].append({
+                            'link': 'https://noppa.aalto.fi%s' % link,
+                            'name': link.split('/')[-1],
+                            'type': 'department'
+                            })
+                        
+        
+        return HttpResponse(json.dumps(json_dict),
+                            content_type = 'application/json')
+        
+    def find_nodes(self, start_url, depth = 1, node_reg = '', node_ex_reg = ''):
+        nodes = []
+        
+        if depth > 1:
+            nodes.extend(self.find_nodes(start_url,
+                                         depth = depth - 1,
+                                         node_reg = node_reg,
+                                         node_ex_reg = node_ex_reg))
+            
+        return nodes

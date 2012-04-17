@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from views import Noppa
+from views import Noppa, Node
 
 urlpatterns = patterns('',
     # Examples:
@@ -12,6 +12,9 @@ urlpatterns = patterns('',
                 Noppa.as_view()),
     (r'^noppa/(?P<faculty>@?[-+_\w\.]+)/(?P<department>@?[-+_\w]+)/(?P<course>@?[-+_\.\w]+)/$',
                 Noppa.as_view()),
+    
+    (r'^node/(?P<course>@?[-+_\w\.]+)/$',
+                Node.as_view()),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

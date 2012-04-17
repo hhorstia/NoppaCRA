@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>test canvas</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="600" height="600">
+        </canvas>
+        <script type="text/javascript" src="ocanvas-2.1.0.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript">
+    $(document).ready(function() {
+        var canvas = oCanvas.create({
+            canvas: "#canvas",
+            background: "#000000"
+        });
+        console.log(canvas);
+
+        var ellipse = canvas.display.ellipse({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius_x: 10,
+            radius_y: 10,
+            stroke: "4px #0aa"
+        });
+        
+        var line = canvas.display.line({
+            start: { x: canvas.width / 2, y: canvas.height / 2 },
+            end: { x: 0, y: 0 },
+            stroke: "4px #099",
+            cap: "round"
+        });
+        canvas.addChild(line);
+        canvas.addChild(ellipse);
+    });
+        </script>
+    </body>
+</html>
