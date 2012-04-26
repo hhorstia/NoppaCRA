@@ -1,0 +1,24 @@
+.ui-page {
+	-webkit-backface-visibility: hidden;
+}
+
+input.ui-input-text, textarea.ui-input-text {
+	line-height: 1 !important;
+}
+
+.page {
+	display: none;
+}
+
+.ui-loader {
+	box-shadow: 0 0 0 0 white !important;
+}
+
+#greet {
+	text-align: center;
+	margin-top: 0;
+}
+
+#home {
+	text-align: center;
+}
