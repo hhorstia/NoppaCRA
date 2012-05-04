@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	
+	<title>Noppa.us</title>
+	
+	<!-- iPhone -->
+	<link href="img/apple-touch-icon-57x57.png" sizes="57x57" rel="apple-touch-icon">
+	<!-- iPad -->
+	<link href="img/apple-touch-icon-72x72.png" sizes="72x72" rel="apple-touch-icon">
+	<!-- iPhone (Retina) -->
+	<link href="img/apple-touch-icon-114x114.png" sizes="114x114" rel="apple-touch-icon">
+	<!-- iPad (Retina) -->
+	<link href="img/apple-touch-icon-144x144.png" sizes="144x144" rel="apple-touch-icon">
+	
+	
+	<!-- iPhone -->
+	<link href="img/apple-touch-startup-image-320x460.png" media="(device-width: 320px)" rel="apple-touch-startup-image">
+	<!-- iPhone (Retina) -->
+	<link href="img/apple-touch-startup-image-640x920.png" media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	<!-- iPad (portrait) -->
+	<link href="img/apple-touch-startup-image-768x1004.png" media="(device-width: 768px) and (orientation: portrait)" rel="apple-touch-startup-image">
+	<!-- iPad (landscape) -->
+	<link href="img/apple-touch-startup-image-748x1024.png" media="(device-width: 768px) and (orientation: landscape)" rel="apple-touch-startup-image">
+	<!-- iPad (Retina, portrait) -->
+	<link href="img/apple-touch-startup-image-1536x2008.png" media="(device-width: 1536px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	<!-- iPad (Retina, landscape) -->
+	<link href="img/apple-touch-startup-image-1496x2048.png" media="(device-width: 1536px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+	
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="css/noppa.css" />
+	
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<script src="lib/raty/js/jquery.raty.min.js"></script>
+	<script src="js/noppa.js"></script>
+</head>
+
+<body>
+
+<div data-role="page" data-theme="a">
+
+		<div data-role="header" data-id="header" data-position="fixed">
+			<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
+			<h1>Noppa.us</h1>
+			<a href="#login" data-role="button" data-icon="star" data-inline="true" data-mini="true" class="login">Login</a>
+		</div>
+
+		<div data-role="content" id="home" class="page" style="display: block;">
+		<h4 id="greet">Mobile interface for Aalto University Noppa course service</h4>
+		<img src="img/panda.png" />
+		<!--
+		<h4>The application</h4>
+		<p>Welcome to Noppa.us - a mobile interface for advanced searching and reviewing of Aalto University courses found in the official Noppa course service.</p>
+		
+		<h4>Rating courses</h4>
+		<p>To review and rate courses, you will need to register (or login) to the service. The registration form can be found in the login menu launched from the button in the top-right corner.</p>
+		-->
+	</div>
+
+	<div data-role="content" id="login" class="page">
+		<p>Please login to review courses and view your previous reviews.</p>
+		<form id="authenticate" action="#" method="POST">
+			<div data-role="fieldcontain" class="ui-hide-label">
+				<label for="username">Username:</label>
+				<input type="text" name="username" id="username" value="" placeholder="Username" />
+				<label for="password">Password:</label>
+				<input type="password" name="password" id="password" value="" placeholder="Password" />
+			</div>
+			<button type="submit" name="submit" data-theme="b">Login</button>
+			<button type="submit" name="submit" disabled="disabled">Register</button>
+		</form>
+	</div>
+
+	<div data-role="content" id="search" class="page">
+			<ul data-role="listview" data-theme="g" data-divider-theme="d"> <!-- data-filter="true" -->
+				<li data-role="list-divider">Department of Computer Science</li>
+				<li>
+					<a href="#">
+						<div class="name">WWW Applications</div>
+						<div class="code">T-111.5360</div>
+						<div id="T-111-5360" class="stars"></div>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<div class="name">Introduction to Software Engineering</div>
+						<div class="code">T-76.3601</div>
+						<div id="T-76-3601" class="stars"></div>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<div class="name">Interaction Design and Evaluation</div>
+						<div class="code">T-121.5450</div>
+						<div id="T-121-5450" class="stars"></div>
+					</a>
+				</li>
+				<li data-role="list-divider">Department of Media Technology</li>
+				<li>
+					<a href="#">
+						<div class="name">WWW Applications</div>
+						<div class="code">T-111.5360</div>
+						<div id="T-111-5360" class="stars"></div>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<div class="name">Introduction to Software Engineering</div>
+						<div class="code">T-76.3601</div>
+						<div id="T-76-3601" class="stars"></div>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div data-role="content" id="sort" class="page">
+			<p>This is the sort page</p>
+		</div>
+
+		<div data-role="content" id="filter" class="page">
+			<p>This is the filter page</p>
+		</div>
+
+		<div data-role="footer" data-id="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#search" data-icon="search" class="search">Search</a></li>
+					<li><a href="#sort" data-icon="grid" class="sort">Sort</a></li>
+					<li><a href="#filter" data-icon="gear" class="filter">Filter</a></li>
+				</ul>
+			</div>
+		</div>
+
+</div>
+
+</body>
+</html>

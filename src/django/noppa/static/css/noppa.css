@@ -22,3 +22,23 @@ input.ui-input-text, textarea.ui-input-text {
 #home {
 	text-align: center;
 }
+
+#search .name {
+	
+}
+
+#search .code {
+	display: inline-block;
+	font-size: 11px;
+	color: #bbbbbb;
+	min-width: 57px;
+}
+
+#search .stars {
+	display: inline-block;
+	margin: 5px 5px 0 5px;
+}
+
+#search .stars img {
+	cursor: pointer;
+}

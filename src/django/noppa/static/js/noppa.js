@@ -1,5 +1,6 @@
 var NoppaCRA = {
 
+	fresh	: true,
 	ready	: false,
 	loading : false,
 	
@@ -44,7 +45,12 @@ var NoppaCRA = {
 			if (hash != '') {
 				$(hash).show();
 			} else {
-				location.reload(true);
+				if (!NoppaCRA.fresh) {
+					location.reload(true);
+				} else {
+					NoppaCRA.fresh = false;
+					window.location.hash = '#home';
+				}
 			}
 			switch(hash) {
 				case '#home':
@@ -52,12 +58,14 @@ var NoppaCRA = {
 				case '#login':
 					break;
 				case '#search':
+					NoppaCRA.initSearch();
 					break;
 				case '#sort':
 					break;
 				case '#filter':
 					break;
 				default:
+					NoppaCRA.fresh = false;
 					break;
 			}
 			$('.ui-loader').hide();
@@ -71,6 +79,36 @@ var NoppaCRA = {
 		
 		NoppaCRA.ready = true;
 	
+	},
+	
+	initSearch : function() {
+	
+		$('#search ul').append('<li>' 
+								+ '<a href="#">'
+									+ '<div class="name">Introduction to Software Engineering</div>' 
+									+ '<div class="code">T-76.3601</div>'
+									+ '<div id="T-76-3601" class="stars"></div>'
+								+ '</a>' +
+								'</li>').trigger('create');
+		$('#search ul').listview('refresh');
+		
+		$('#T-111-5360').raty({
+			half: true,
+			readOnly: true,
+			score: 2.5
+		});
+		/*
+		jQuery.ajax({
+			type: 'GET',
+			url: 'http://127.0.0.1:8000/noppa/taik/a803/',
+			jsonpCallback: 'NoppaCRA.handle',
+			dataType: "jsonp"
+		});
+		*/
+	},
+	
+	handle : function() {
+		alert('a');
 	}
 
 }
