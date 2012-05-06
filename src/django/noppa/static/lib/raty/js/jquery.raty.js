@@ -437,7 +437,7 @@
 		mouseover		: undefined,
 		noRatedMsg		: 'not rated yet',
 		number			: 5,
-		path			: 'img/',
+		path			: 'static/img/',
 		precision		: false,
 		round			: { down: .25, full: .6, up: .76 },
 		readOnly		: false,

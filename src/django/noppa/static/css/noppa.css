@@ -99,11 +99,11 @@ input.ui-input-text, textarea.ui-input-text {
 	/*color: #bbbbbb;*/
 }
 
-#course .course-details p {
+#course .course-details p, #course .course-reviews p, #course .course-review p, #course .course-review label {
 	font-size: 13px;
 }
 
-#course .course-review {
+#course .course-review, #course .course-reviews {
 	display: none;
 }
 

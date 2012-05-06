@@ -320,7 +320,9 @@ var NoppaCRA = {
 						+ '</a>' +
 						'</li>';
 			markup = markup + item;
-			identifiers.push('#' + identifier);
+			if (identifier != '') {
+				identifiers.push('#' + identifier);
+			}
 			grades.push(parseInt(this.grade) * 0.5);
 		});
 		markup = '<li data-role="list-divider">' + fname + '</li>' + markup;
@@ -328,7 +330,7 @@ var NoppaCRA = {
 		
 		$.each(identifiers, function(index, value) {
 			if (grades[index]) {
-				$('#' + value).raty({
+				$(value).raty({
 					half: true,
 					readOnly: true,
 					score: grades[index]
@@ -342,7 +344,9 @@ var NoppaCRA = {
 	loadCourse : function() {
 	
 		$('.ui-loader').show();
-	
+		
+		$('#course .course-review, #course .course-reviews').hide();
+		$('#course .course-reviews-content').html('<span>No reviews.</span>');
 		var info = window.location.hash.split('+');
 	
 		jQuery.ajax({
@@ -380,11 +384,29 @@ var NoppaCRA = {
 			
 			if (NoppaCRA.authenticated) {
 			
-				$('#course .course-review').show();
+				$.post('auth/', { method: 'review', faculty: info[1], department: info[2], course: info[3] },
+					function(data) {
+						console.log(data.value);
+						if (data.value != 'ERROR') {
+							// TODO
+						}
+						$('#course .course-review').show();
+					}, "json"
+				);
 			
 			}
-								
-			$('.ui-loader').hide();
+			
+			$.post('auth/', { method: 'course', faculty: info[1], department: info[2], course: info[3] },
+				function(data) {
+					console.log(data.value);
+					if (data.value != 'ERROR') {
+						// TODO
+					}
+					$('#course .course-reviews').show();
+					$('.ui-loader').hide();
+				}, "json"
+			);
+			
 		});
 	
 	},
@@ -536,6 +558,30 @@ var NoppaCRA = {
 			);
 			
 			return false;
+		});
+		
+		$('#review').submit(function() {
+		
+			$('.ui-loader').show();
+			
+			var info = window.location.hash.split('+');
+			
+			var comment = $('#comment').val();
+			var grade = $('#rating').val();
+			
+			$.post('noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/', { comment: comment, grade: grade },
+				function(data) {
+					console.log(data);
+					if (data.value == 'evaluation done') {
+						$('.ui-loader').hide();
+					} else {
+						$('.ui-loader').hide();
+					}
+				}, "json"
+			);
+			
+			return false;
+		
 		});
 	
 	}

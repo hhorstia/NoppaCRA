@@ -141,9 +141,23 @@ class Noppa(View):
         if request.user.is_authenticated() != True:
             return HttpResponse('evaluation error: not authenticated')
         
-        grade = request.POST['grade']
+        grade = int(request.POST['grade'])
+        
+        if grade > 10 or grade < 0:
+            return HttpResponse('evaluation error: invalid grade')
+        
         comment = request.POST['comment']
+        
+        if len(comment) > 2000:
+            return HttpResponse('evaluation error: comment too long')
+        
         user = request.user.id
+        
+        review = Evaluation.objects.filter(user=user, faculty=faculty, department=department, course=course)
+        if len(review) > 0:
+            review = Evaluation.objects.get(id=review[0].id)
+            review.delete()
+        
         new_evaluation = Evaluation(faculty = faculty,
                                     department = department,
                                     course = course,
@@ -323,6 +337,31 @@ class Auth(View):
                 response_data['value'] = serializers.serialize("json", reviews)
             else:
                 response_data['value'] = 'ERROR'
+            return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+        
+        
+        # review - returns the review done by the user for one course
+        
+        elif request.POST['method'] == 'review':
+            if request.user.is_authenticated():
+                faculty = request.POST['faculty']
+                department = request.POST['department']
+                course = request.POST['course']
+                reviews = Evaluation.objects.filter(user=request.user.id, faculty=faculty, department=department, course=course)
+                response_data['value'] = serializers.serialize("json", reviews)
+            else:
+                response_data['value'] = 'ERROR'
+            return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+        
+        
+        # course - returns all the reviews of one course
+        
+        elif request.POST['method'] == 'course':
+            faculty = request.POST['faculty']
+            department = request.POST['department']
+            course = request.POST['course']
+            reviews = Evaluation.objects.filter(faculty=faculty, department=department, course=course)
+            response_data['value'] = serializers.serialize("json", reviews)
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
         
         
