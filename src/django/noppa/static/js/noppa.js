@@ -66,44 +66,7 @@ var NoppaCRA = {
 			if (hash.startsWith('#course')) {
 			
 				coursePage = true;
-				$('.ui-loader').show();
-			
-				var info = hash.split('+');
-			
-				jQuery.ajax({
-					type: 'GET',
-					url: '../noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
-				}).done(function(data) {
-					//console.log(data);
-					
-					$.each(data, function() {
-					
-						var credits = null;
-						var period = null;
-						
-						if (typeof(this.Any) != 'undefined') {
-							$('#course-credits').html(this.Any.text);
-							credits = this.Any;
-						}
-						if (typeof(this.Any_2) != 'undefined') {
-							$('#course-period').html(this.Any_2.text);
-							period = this.Any_2;
-							$('#course-credits').width($('#course-code').width());
-						}
-						
-						$.each(this, function() {
-							if (this != credits && this != period && this.heading != '' && typeof(this.heading) != 'undefined' && this.text != '' && typeof(this.text) != 'undefined') {
-								$('#course .course-details').append(
-									'<div data-role="collapsible" class="course-detail">' +
-										'<h3 class="course-detail-title">' + $.trim(this.heading) + '</h3>' +
-										'<p class="course-detail-value">' + $.trim(this.text) + '</p>' +
-									'</div>').trigger('create');
-							}
-						});
-					});
-										
-					$('.ui-loader').hide();
-				});
+				NoppaCRA.loadCourse();
 			
 				/*$('#search').show();*/
 				$('#course').show();
@@ -189,7 +152,7 @@ var NoppaCRA = {
 	
 		jQuery.ajax({
 			type: 'GET',
-			url: '../noppa/'
+			url: 'noppa/'
 		}).done(function(data) {
 			console.log(data);
 			
@@ -207,7 +170,7 @@ var NoppaCRA = {
 				
 				jQuery.ajax({
 					type: 'GET',
-					url: '../noppa/' + this.code + '/'
+					url: 'noppa/' + this.code + '/'
 				}).done(function(data) {
 					console.log(data);
 					console.log(scode);
@@ -266,7 +229,7 @@ var NoppaCRA = {
 			
 			jQuery.ajax({
 				type: 'GET',
-				url: '../noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
+				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
 			}).done(function(data) {
 				NoppaCRA.addResults(data, thisHolder.data('school-code'), thisHolder.data('faculty-code'), thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 				$('.ui-loader').hide();
@@ -334,6 +297,50 @@ var NoppaCRA = {
 		$('#search ul').listview('refresh');
 	},
 	
+	loadCourse : function() {
+	
+		$('.ui-loader').show();
+	
+		var info = window.location.hash.split('+');
+	
+		jQuery.ajax({
+			type: 'GET',
+			url: 'noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
+		}).done(function(data) {
+			//console.log(data);
+			
+			$.each(data, function() {
+			
+				var credits = null;
+				var period = null;
+				
+				if (typeof(this.Any) != 'undefined') {
+					$('#course-credits').html(this.Any.text);
+					credits = this.Any;
+				}
+				if (typeof(this.Any_2) != 'undefined') {
+					$('#course-period').html(this.Any_2.text);
+					period = this.Any_2;
+					$('#course-credits').width($('#course-code').width());
+				}
+				
+				$.each(this, function() {
+					if (this != credits && this != period && this.heading != '' && typeof(this.heading) != 'undefined' && this.text != '' && typeof(this.text) != 'undefined') {
+						$('#course .course-details').append(
+							'<div data-role="collapsible" class="course-detail">' +
+								'<h3 class="course-detail-title">' + $.trim(this.heading) + '</h3>' +
+								'<p class="course-detail-value">' + $.trim(this.text) + '</p>' +
+							'</div>');
+					}
+				});
+				$('#course .course-details').trigger('create');
+			});
+								
+			$('.ui-loader').hide();
+		});
+	
+	},
+	
 	initEvents : function() {
 	
 		$('#search ul li a').live('click', function() {
@@ -377,7 +384,27 @@ var NoppaCRA = {
 		});
 		
 		$('#authenticate').submit(function() {
-			console.log('form submitted');
+			
+			var usernameString = $('#username').val();
+			var passwordString = $('#password').val();	
+			
+			if (usernameString != '' && passwordString != '') {
+			
+				$('.ui-loader').show();
+				
+				$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
+					function(data) {
+						console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
+						if (data.value) {
+							
+						} else {
+							$('#login').append('Login failed. Check your credentials!');
+						}
+						$('.ui-loader').hide();
+					}, "json"
+				);
+			
+			}
 			return false;
 		});
 	

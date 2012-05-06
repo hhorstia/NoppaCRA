@@ -9,3 +9,4 @@ class Evaluation(models.Model):
         choices = zip( range(1,10), range(1,10) )
     )
     comment = models.TextField()
+    user = models.IntegerField()

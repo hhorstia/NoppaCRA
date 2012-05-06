@@ -98,6 +98,10 @@ input.ui-input-text, textarea.ui-input-text {
 	font-size: 13px;
 }
 
+#course .course-review {
+	display: none;
+}
+
 #filter .ui-btn-text {
 	width: 88%;
 }

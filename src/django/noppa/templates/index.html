@@ -33,12 +33,14 @@
 	<link href="img/apple-touch-startup-image-1496x2048.png" media="(device-width: 1536px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
 	
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-	<link rel="stylesheet" href="css/noppa.css" />
+	<link rel="stylesheet" href="static/css/noppa.css" />
 	
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
-	<script src="lib/raty/js/jquery.raty.min.js"></script>
-	<script src="js/noppa.js"></script>
+	<script src="static/lib/raty/js/jquery.raty.min.js"></script>
+	<script src="static/lib/sha512/sha512.js"></script>
+	<script src="static/lib/django/csrf.js"></script>
+	<script src="static/js/noppa.js"></script>
 </head>
 
 <body>
@@ -54,12 +56,18 @@
 	<div data-role="content" id="course" class="page" data-current-course="">
 		<h4 id="course-code"></h4> <h3 id="course-name"></h3><br />
 		<h5 id="course-credits"></h5> <h5 id="course-period"></h5>
-		<div data-role="collapsible-set" data-mini="true" class="course-details"></div>
+		<div data-role="collapsible-set" data-mini="true" class="course-details"></div><br/>
+		<div data-role="collapsible-set" data-mini="true" data-theme="b" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="course-review">
+			<div data-role="collapsible" class="course-detail">
+				<h3 class="course-review-title">Review the course</h3>
+				<p class="course-review-content"></p>
+			</div>
+		</div>
 	</div>
 
 	<div data-role="content" id="home" class="page" style="display: block;">
 		<h4 id="greet">Mobile interface for Aalto University Noppa course service</h4>
-		<img src="img/panda.png" />
+		<img src="static/img/panda.png" />
 		<!--
 		<h4>The application</h4>
 		<p>Welcome to Noppa.us - a mobile interface for advanced searching and reviewing of Aalto University courses found in the official Noppa course service.</p>
@@ -71,7 +79,7 @@
 
 	<div data-role="content" id="login" class="page">
 		<p>Please login to review courses and view your previous reviews.</p>
-		<form id="authenticate" action="#" method="POST">
+		<form id="authenticate" action="#" method="POST">{% csrf_token %}
 			<div data-role="fieldcontain" class="ui-hide-label">
 				<label for="username">Username:</label>
 				<input type="text" name="username" id="username" value="" placeholder="Username" />
