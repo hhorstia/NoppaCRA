@@ -22,6 +22,8 @@ var NoppaCRA = {
 	loginButton : false,
 	registerButton : false,
 	
+	authenticated : false,
+	
 	init : function() {
 	
 		window.location.hash = '';
@@ -63,6 +65,7 @@ var NoppaCRA = {
 			var searchRefresh = false;
 			var filterRefresh = false;
 			var coursePage = false;
+			var reviewPage = false;
 			
 			$('.page').hide();
 						
@@ -76,6 +79,8 @@ var NoppaCRA = {
 				/*$('#course').animate({
 					left: '0%'
 				}, 1000);*/
+			} else if (hash == '#reviews') {
+				//
 			} else if (hash != '') {
 				$(hash).show();
 			} else {
@@ -99,6 +104,9 @@ var NoppaCRA = {
 					break;
 				case '#login':
 					$('.login').addClass('ui-btn-active');
+					$('#logged-in-user').html('');
+					$('.login').attr('href', '#login');
+					$('.login').children('span').children('.ui-btn-text').text('Login');
 					break;
 				case '#search':
 					$('.search').addClass('ui-btn-active');
@@ -123,14 +131,16 @@ var NoppaCRA = {
 					break;
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
-					
 					if (NoppaCRA.filterRefresh) {
-					
 						filterRefresh = true;
 						NoppaCRA.refreshFilters();
 						NoppaCRA.filterRefresh = false;
-					
 					}
+					break;
+				case '#reviews':
+					$('.login').addClass('ui-btn-active');
+					reviewPage = true;
+					NoppaCRA.refreshReviews();
 					
 					break;
 				default:
@@ -138,7 +148,7 @@ var NoppaCRA = {
 					break;
 			}
 			
-			if (!searchRefresh && !coursePage && !filterRefresh) {
+			if (!searchRefresh && !coursePage && !filterRefresh && !reviewPage) {
 				$('.ui-loader').hide();
 			}
 			NoppaCRA.loading = false;
@@ -146,6 +156,35 @@ var NoppaCRA = {
 		
 		NoppaCRA.initEvents();
 		NoppaCRA.ready = true;
+	
+	},
+	
+	refreshReviews : function() {
+	
+		$('#reviews').hide();
+		
+		$.post('auth/', { method: 'authenticated' },
+			function(data) {
+				if (data.value) {
+					$('#logged-in-user').html($('#username').val());
+					$('.login').attr('href', '#reviews')
+					$('.login').children('span').children('.ui-btn-text').text('Reviews');
+					$('#reviews p, #reviews form').show();
+				}
+				$('#reviews').show();
+				$('.ui-loader').hide();
+			}, "json"
+		);
+		
+		$.post('auth/', { method: 'reviews' },
+			function(data) {
+				console.log(data);
+				if (data.value != 'ERROR') {
+					$('#reviews-holder').html(data);
+				}
+				$('.ui-loader').hide();
+			}, "json"
+		);
 	
 	},
 	
@@ -338,6 +377,12 @@ var NoppaCRA = {
 				});
 				$('#course .course-details').trigger('create');
 			});
+			
+			if (NoppaCRA.authenticated) {
+			
+				$('#course .course-review').show();
+			
+			}
 								
 			$('.ui-loader').hide();
 		});
@@ -426,7 +471,8 @@ var NoppaCRA = {
 						function(data) {
 							console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
 							if (data.value) {
-								
+								window.location.hash = '#reviews';
+								NoppaCRA.authenticated = true;
 							} else {
 								$('#login .login-error').show();
 							}
@@ -443,7 +489,8 @@ var NoppaCRA = {
 						function(data) {
 							console.log('Register: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
 							if (data.value == 'OK') {
-								
+								window.location.hash = '#reviews';
+								NoppaCRA.authenticated = true;
 							} else {
 								$('#login .register-error').show();
 							}
@@ -463,6 +510,32 @@ var NoppaCRA = {
 		
 		$('#register-button').bind('click', function() {
 			NoppaCRA.registerButton = true;
+		});
+		
+		$('#logout').submit(function(event) {
+		
+			$('#login .login-error, #login .registration-error').hide();
+			$('#username').val('');
+			$('#password').val('');
+			
+			$('.ui-loader').show();
+			
+			$.post('auth/', { method: 'logout' },
+				function(data) {
+					console.log('Logout: ' + data.method + ' returns ' + data.value + '.');
+					if (data.value == 'OK') {
+						window.location.hash = '#login';
+						$('#logged-in-user, #reviews-holder').html('');
+						$('.login').attr('href', '#login');
+						$('.login').children('span').children('.ui-btn-text').text('Login');
+						$('#reviews p, #reviews form').hide();
+						NoppaCRA.authenticated = false;
+					}
+					$('.ui-loader').hide();
+				}, "json"
+			);
+			
+			return false;
 		});
 	
 	}

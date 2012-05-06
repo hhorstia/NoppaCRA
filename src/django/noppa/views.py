@@ -6,11 +6,14 @@ from models import Evaluation
 from django.db.models import Avg
 
 from django.utils import simplejson
+from django.core import serializers
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, UserManager
 from django.shortcuts import render_to_response
 from django.template import Context, RequestContext
 
+import time
 import json
 import re
 
@@ -134,6 +137,10 @@ class Noppa(View):
         The post function is used for giving a grade or comment
         to a course
         """
+        
+        if request.user.is_authenticated() != True:
+            return HttpResponse('evaluation error: not authenticated')
+        
         grade = request.POST['grade']
         comment = request.POST['comment']
         user = request.user.id
@@ -246,17 +253,23 @@ class Auth(View):
                 return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
             
             user = authenticate(username=username, password=password) # try to login user
+            time.sleep(0.5)
             
             if user != None:
                 if user.is_active:
                     login(request, user)
+                    time.sleep(0.5)
                     # Success
                     response_data['value'] = request.user.is_authenticated()
                 else:
                     # Disabled account
+                    user = authenticate(username=username, password=password) # try to login user
+                    time.sleep(0.5)
                     response_data['value'] = request.user.is_authenticated()
             else:
                 # Invalid login
+                user = authenticate(username=username, password=password) # try to login user
+                time.sleep(0.5)
                 response_data['value'] = request.user.is_authenticated()
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
     
@@ -299,6 +312,17 @@ class Auth(View):
                 response_data['value'] = 'OK'
             else: # user was not logged in so no need to log out
                 response_data['value'] = 'NOT_LOGGED_IN'
+            return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+        
+        
+        # reviews - return the reviews done by the user
+        
+        elif request.POST['method'] == 'reviews':
+            if request.user.is_authenticated():
+                reviews = Evaluation.objects.filter(user=request.user.id)
+                response_data['value'] = serializers.serialize("json", reviews)
+            else:
+                response_data['value'] = 'ERROR'
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
         
         
