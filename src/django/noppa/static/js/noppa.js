@@ -140,11 +140,16 @@ var NoppaCRA = {
 						$('#search ul li').removeClass('ui-btn-active');
 					}, 1000);
 					if (NoppaCRA.searchRefresh) {
-						NoppaCRA.refreshSearch();
+						NoppaCRA.refreshSearch(NoppaCRA.filterRefresh);
 						NoppaCRA.searchRefresh = false;
 						searchRefresh = true;
 					} else {
 						$('body').scrollTop(NoppaCRA.searchLastScrollTop);
+					}
+					if (NoppaCRA.filterRefresh) {
+						NoppaCRA.refreshFilters(true);
+						NoppaCRA.filterRefresh = false;
+						searchRefresh = true;
 					}
 					break;
 				case '#sort':
@@ -156,64 +161,10 @@ var NoppaCRA = {
 					if (NoppaCRA.filterRefresh) {
 					
 						filterRefresh = true;
-						$('#filter .faculties').hide();
-					
-						jQuery.ajax({
-							type: 'GET',
-							url: '../noppa/'
-						}).done(function(data) {
-							console.log(data);
-							
-							$.each(data, function() {
-								$('#filter .faculties').append(
-									'<div class="' + this.code + '" data-role="fieldcontain">' +
-										'<h4 class="name">' + this.name + '</h4>' +
-										'<fieldset class="group" data-role="controlgroup"></fieldset>' +
-									'</div>');
-									
-								var scode = this.code;
-								
-								jQuery.ajax({
-									type: 'GET',
-									url: '../noppa/' + this.code + '/'
-								}).done(function(data) {
-									console.log(data);
-									console.log(scode);
-									
-									$.each(data, function() {
-										var identifier = this.code.replace(',', '-').replace('.', '-');
-										var faculties = localStorage.getItem('faculties').split(',');
-										var checked = '';
-										for (var i = 0; i < faculties.length; i++) {
-											if (this.code == faculties[i]) {
-												checked = 'checked="checked" ';
-												NoppaCRA.searchRefresh = true;
-											}
-										}
-										$('#filter .faculties .' + scode + ' .group').append(
-											'<input type="checkbox" ' + checked + 'name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-school-code="' + scode + '" data-faculty-code="' + this.code + '" />' +
-											'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
-									});
-									
-									$('#filter .faculties .' + scode).trigger('create');
-									
-									$('#filter .faculties').show();
-									$('.ui-loader').hide();
-									
-								});
-								
-							});
-							
-						});
-						
+						NoppaCRA.refreshFilters();
 						NoppaCRA.filterRefresh = false;
 					
 					}
-					
-					/*<div class="ui-controlgroup-controls">
-						<input type="checkbox" name="checkbox-0" id="checkbox-0" class="custom" data-mini="true" />
-						<label for="checkbox-0">I agree</label>
-					</div>*/
 					
 					break;
 				default:
@@ -232,7 +183,76 @@ var NoppaCRA = {
 	
 	},
 	
-	refreshSearch : function() {
+	refreshFilters : function(callback) {
+	
+		$('#filter .faculties').hide();
+	
+		jQuery.ajax({
+			type: 'GET',
+			url: '../noppa/'
+		}).done(function(data) {
+			console.log(data);
+			
+			var counter = 0;
+			var done = 0;
+			
+			$.each(data, function() {
+				$('#filter .faculties').append(
+					'<div class="' + this.code + '" data-role="fieldcontain">' +
+						'<h4 class="name">' + this.name + '</h4>' +
+						'<fieldset class="group" data-role="controlgroup"></fieldset>' +
+					'</div>');
+					
+				var scode = this.code;
+				
+				jQuery.ajax({
+					type: 'GET',
+					url: '../noppa/' + this.code + '/'
+				}).done(function(data) {
+					console.log(data);
+					console.log(scode);
+					
+					$.each(data, function() {
+						var identifier = this.code.replace(',', '-').replace('.', '-');
+						var faculties = localStorage.getItem('faculties').split(',');
+						var checked = '';
+						for (var i = 0; i < faculties.length; i++) {
+							if (this.code == faculties[i]) {
+								checked = 'checked="checked" ';
+								if (!callback) {
+									NoppaCRA.searchRefresh = true;
+								}
+							}
+						}
+						$('#filter .faculties .' + scode + ' .group').append(
+							'<input type="checkbox" ' + checked + 'name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-school-code="' + scode + '" data-faculty-code="' + this.code + '" />' +
+							'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
+					});
+					
+					$('#filter .faculties .' + scode).trigger('create');
+					
+					$('#filter .faculties').show();
+					if (!callback) {
+						$('.ui-loader').hide();
+					}
+					
+					done++;
+					
+					if (callback && done == counter) {
+						NoppaCRA.refreshSearch();
+					}
+					
+				});
+				
+				counter++;
+				
+			});
+			
+		});
+	
+	},
+	
+	refreshSearch : function(callback) {
 	
 		$('.ui-loader').show();
 		$('#search ul').html('').listview('refresh');
@@ -251,7 +271,7 @@ var NoppaCRA = {
 			
 		});
 		
-		if ($('#filter input:checked').length == 0) {
+		if ($('#filter input:checked').length == 0 && !callback) {
 			$('#search ul').html('<p class="search-info">Please select the faculties interesting you from the filter page.</p>').listview('refresh');
 			$('.ui-loader').hide();
 		}
@@ -343,7 +363,11 @@ var NoppaCRA = {
 				previous = '';
 			}
 			console.log(previous);
-			previous = previous + $(this).data('faculty-code') + ',';
+			if ($(this).is(':checked')) {
+				previous = previous + $(this).data('faculty-code') + ',';
+			} else {
+				previous = previous.replace($(this).data('faculty-code') + ',', '');
+			}
 			console.log(previous);
 			localStorage.setItem('faculties', previous);
 			NoppaCRA.searchRefresh = true;
