@@ -19,6 +19,9 @@ var NoppaCRA = {
 	
 	searchLastScrollTop : 0,
 	
+	loginButton : false,
+	registerButton : false,
+	
 	init : function() {
 	
 		window.location.hash = '';
@@ -405,31 +408,61 @@ var NoppaCRA = {
 		
 		});
 		
-		$('#authenticate').submit(function() {
+		$('#authenticate').submit(function(event) {
 		
 			$('#login .login-error, #login .registration-error').hide();
 			
 			var usernameString = $('#username').val();
-			var passwordString = $('#password').val();	
+			var passwordString = $('#password').val();
 			
 			if (usernameString != '' && passwordString != '') {
-			
-				$('.ui-loader').show();
 				
-				$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
-					function(data) {
-						console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
-						if (data.value == 'OK') {
-							
-						} else {
-							$('#login .login-error').show();
-						}
-						$('.ui-loader').hide();
-					}, "json"
-				);
+				if (NoppaCRA.loginButton) {
+				
+					$('.ui-loader').show();
+					NoppaCRA.loginButton = false;
+					
+					$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
+						function(data) {
+							console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
+							if (data.value) {
+								
+							} else {
+								$('#login .login-error').show();
+							}
+							$('.ui-loader').hide();
+						}, "json"
+					);
+					
+				} else if (NoppaCRA.registerButton) {
+				
+					$('.ui-loader').show();
+					NoppaCRA.registerButton = false;
+					
+					$.post('auth/', { method: 'register', username: usernameString, password: hex_sha512(passwordString) },
+						function(data) {
+							console.log('Register: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
+							if (data.value == 'OK') {
+								
+							} else {
+								$('#login .register-error').show();
+							}
+							$('.ui-loader').hide();
+						}, "json"
+					);
+				
+				}
 			
 			}
 			return false;
+		});
+		
+		$('#login-button').bind('click', function() {
+			NoppaCRA.loginButton = true;
+		});
+		
+		$('#register-button').bind('click', function() {
+			NoppaCRA.registerButton = true;
 		});
 	
 	}

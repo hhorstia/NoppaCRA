@@ -7,7 +7,7 @@ input.ui-input-text, textarea.ui-input-text {
 }
 
 .login-error, .registration-error {
-	color: red;
+	color: #ff3030;
 	display: none;
 }
 

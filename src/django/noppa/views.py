@@ -265,11 +265,11 @@ class Auth(View):
         # NOTE: username does not need to be an email address
     
         elif request.POST['method'] == 'register':
-            username = request.POST['email']
+            username = request.POST['username']
             password = request.POST['password']
             
             # check the length of username and password:
-            if len(username) == 0 or len(password) == 0 or len(username) > 50 or len(password) > 50:
+            if len(username) == 0 or len(password) == 0 or len(username) > 50 or len(password) > 500:
                 response_data['value'] = 'ERROR_LEN'
                 return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
             
