@@ -71,7 +71,34 @@ var NoppaCRA = {
 					type: 'GET',
 					url: '../noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
 				}).done(function(data) {
-					console.log(data);
+					//console.log(data);
+					
+					$.each(data, function() {
+					
+						var credits = null;
+						var period = null;
+						
+						if (typeof(this.Any) != 'undefined') {
+							$('#course-credits').html(this.Any.text);
+							credits = this.Any;
+						}
+						if (typeof(this.Any_2) != 'undefined') {
+							$('#course-period').html(this.Any_2.text);
+							period = this.Any_2;
+							$('#course-credits').width($('#course-code').width());
+						}
+						
+						$.each(this, function() {
+							if (this != credits && this != period && this.heading != '' && typeof(this.heading) != 'undefined' && this.text != '' && typeof(this.text) != 'undefined') {
+								$('#course .course-details').append(
+									'<div data-role="collapsible" class="course-detail">' +
+										'<h3 class="course-detail-title">' + this.heading + '</h3>' +
+										'<p class="course-detail-value">' + this.text + '</p>' +
+									'</div>').trigger('create');
+							}
+						});
+					});
+										
 					$('.ui-loader').hide();
 				});
 			
@@ -226,6 +253,8 @@ var NoppaCRA = {
 			
 			$('#course-code').html($(this).children('.code').html());
 			$('#course-name').html($(this).children('.name').html());
+			$('#course-credits, #course-period').html('');
+			$('#course .course-details').html('');
 			
 			window.location.hash = $(this).attr('href');
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {

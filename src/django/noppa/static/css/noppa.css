@@ -55,8 +55,8 @@ input.ui-input-text, textarea.ui-input-text {
 }
 
 #course {
-	position: fixed;
-	width: 100%;
+	/*position: fixed;*/
+	/*width: 100%;*/
 	min-height: 100%;
 	height: auto;
 	/*padding: 0;*/
@@ -65,15 +65,30 @@ input.ui-input-text, textarea.ui-input-text {
 	z-index: 2;
 }
 
-#course h3 {
+#course #course-name {
 	margin-top: 0;
-	margin-bottom: 10px;
+	margin-bottom: 2px;
 	display: inline-block;
 }
 
-#course h4 {
+#course #course-code {
 	color: #bbbbbb;
 	margin-top: 0;
 	margin-right: 10px;
+	margin-bottom: 2px;
 	display: inline-block;
+}
+
+#course #course-credits, #course #course-period {
+	margin-top: 0;
+	margin-right: 10px;
+	display: inline-block;
+}
+
+#course #course-period {
+	/*color: #bbbbbb;*/
+}
+
+#course .course-details p {
+	font-size: 13px;
 }
