@@ -182,8 +182,16 @@ var NoppaCRA = {
 									
 									$.each(data, function() {
 										var identifier = this.code.replace(',', '-').replace('.', '-');
+										var faculties = localStorage.getItem('faculties').split(',');
+										var checked = '';
+										for (var i = 0; i < faculties.length; i++) {
+											if (this.code == faculties[i]) {
+												checked = 'checked="checked" ';
+												NoppaCRA.searchRefresh = true;
+											}
+										}
 										$('#filter .faculties .' + scode + ' .group').append(
-											'<input type="checkbox" name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-school-code="' + scode + '" data-faculty-code="' + this.code + '" />' +
+											'<input type="checkbox" ' + checked + 'name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-school-code="' + scode + '" data-faculty-code="' + this.code + '" />' +
 											'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
 									});
 									
@@ -330,6 +338,14 @@ var NoppaCRA = {
 		});
 		
 		$('#filter input').live('change', function() {
+			var previous = localStorage.getItem('faculties');
+			if (!previous || previous == 'null' || typeof(previous) == 'null') {
+				previous = '';
+			}
+			console.log(previous);
+			previous = previous + $(this).data('faculty-code') + ',';
+			console.log(previous);
+			localStorage.setItem('faculties', previous);
 			NoppaCRA.searchRefresh = true;
 		});
 		
