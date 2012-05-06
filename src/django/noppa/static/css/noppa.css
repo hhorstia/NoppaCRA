@@ -54,6 +54,11 @@ input.ui-input-text, textarea.ui-input-text {
 	cursor: pointer;
 }
 
+#search .search-info {
+	padding: 20px;
+	font-size: 16px;
+}
+
 #course {
 	/*position: fixed;*/
 	/*width: 100%;*/

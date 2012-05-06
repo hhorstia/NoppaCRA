@@ -95,8 +95,8 @@ var NoppaCRA = {
 							if (this != credits && this != period && this.heading != '' && typeof(this.heading) != 'undefined' && this.text != '' && typeof(this.text) != 'undefined') {
 								$('#course .course-details').append(
 									'<div data-role="collapsible" class="course-detail">' +
-										'<h3 class="course-detail-title">' + this.heading + '</h3>' +
-										'<p class="course-detail-value">' + this.text + '</p>' +
+										'<h3 class="course-detail-title">' + $.trim(this.heading) + '</h3>' +
+										'<p class="course-detail-value">' + $.trim(this.text) + '</p>' +
 									'</div>').trigger('create');
 							}
 						});
@@ -183,7 +183,7 @@ var NoppaCRA = {
 									$.each(data, function() {
 										var identifier = this.code.replace(',', '-').replace('.', '-');
 										$('#filter .faculties .' + scode + ' .group').append(
-											'<input type="checkbox" name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-faculty-code="' + this.code + '" />' +
+											'<input type="checkbox" name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-school-code="' + scode + '" data-faculty-code="' + this.code + '" />' +
 											'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
 									});
 									
@@ -228,26 +228,25 @@ var NoppaCRA = {
 	
 		$('.ui-loader').show();
 		$('#search ul').html('').listview('refresh');
-		/*$('#search ul').html('').listview({
-			autodividers: true,
-			autodividersSelector: function(li) {
-				var out = li.children('a').data('faculty-name');
-				return out;
-			}
-		}).listview('refresh');*/
 		
-		jQuery.ajax({
-			type: 'GET',
-			url: '../noppa/taik/a803/'
-		}).done(function(data) {
-			//console.log(data);
-			/*$.each(data, function() {
-				NoppaCRA.addResult(this.code, this.name, this.grade, 'taik', 'a803', 'Muotoilun laitos');
-			});*/
-			$('#search ul').html('<li data-role="list-divider">Muotoilun laitos</li>');
-			NoppaCRA.addResults(data, 'taik', 'a803', 'Muotoilun laitos');
-			$('.ui-loader').hide();
+		$('#filter input:checked').each(function() {
+			
+			var thisHolder = $(this);
+			
+			jQuery.ajax({
+				type: 'GET',
+				url: '../noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
+			}).done(function(data) {
+				NoppaCRA.addResults(data, thisHolder.data('school-code'), thisHolder.data('faculty-code'), thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+				$('.ui-loader').hide();
+			});
+			
 		});
+		
+		if ($('#filter input:checked').length == 0) {
+			$('#search ul').html('<p class="search-info">Please select the faculties interesting you from the filter page.</p>').listview('refresh');
+			$('.ui-loader').hide();
+		}
 		
 	},
 	
@@ -288,6 +287,7 @@ var NoppaCRA = {
 			identifiers.push('#' + identifier);
 			grades.push(parseInt(this.grade) * 0.5);
 		});
+		markup = '<li data-role="list-divider">' + fname + '</li>' + markup;
 		$('#search ul').append(markup).trigger('create');
 		
 		$.each(identifiers, function(index, value) {
@@ -327,6 +327,10 @@ var NoppaCRA = {
 			$('#search ul li').removeClass('ui-btn-active');
 			clearTimeout(NoppaCRA.courseTimer);
 			$(this).parent().parent().parent().addClass('ui-btn-active');
+		});
+		
+		$('#filter input').live('change', function() {
+			NoppaCRA.searchRefresh = true;
 		});
 		
 		$('#authenticate').submit(function() {
