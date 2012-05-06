@@ -107,6 +107,10 @@ input.ui-input-text, textarea.ui-input-text {
 	display: none;
 }
 
+#course .course-reviews-content .grade {
+	margin-right: 15px;
+}
+
 #filter .ui-btn-text {
 	width: 88%;
 }

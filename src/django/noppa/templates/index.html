@@ -58,7 +58,7 @@
 		<h5 id="course-credits"></h5> <h5 id="course-period"></h5>
 		<div data-role="collapsible-set" data-mini="true" class="course-details"></div><br/>
 		<div data-role="collapsible-set" data-mini="true" data-theme="e" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="course-reviews">
-			<div data-role="collapsible">
+			<div data-role="collapsible" id="reviews-collapsible">
 				<h3 class="course-reviews-title">Course reviews</h3>
 				<p class="course-reviews-content">
 					<span>No reviews.</span>
@@ -66,7 +66,7 @@
 			</div>
 		</div>
 		<div data-role="collapsible-set" data-mini="true" data-theme="b" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="course-review">
-			<div data-role="collapsible">
+			<div data-role="collapsible" id="review-collapsible">
 				<h3 class="course-review-title">Review the course</h3>
 				<p class="course-review-content">
 					<form id="review" action="#" method="POST">{% csrf_token %}

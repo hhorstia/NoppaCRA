@@ -382,13 +382,21 @@ var NoppaCRA = {
 				$('#course .course-details').trigger('create');
 			});
 			
+			$('#rating').val(parseInt('5'));
+			$('#rating').selectmenu("refresh");
+			$('#comment').val('');
+			
 			if (NoppaCRA.authenticated) {
 			
 				$.post('auth/', { method: 'review', faculty: info[1], department: info[2], course: info[3] },
 					function(data) {
 						console.log(data.value);
 						if (data.value != 'ERROR') {
-							// TODO
+							$.each($.parseJSON(data.value), function() {
+								$('#rating').val(parseInt(this.fields.grade));
+								$('#rating').selectmenu("refresh");
+								$('#comment').val(this.fields.comment);
+							});
 						}
 						$('#course .course-review').show();
 					}, "json"
@@ -400,7 +408,14 @@ var NoppaCRA = {
 				function(data) {
 					console.log(data.value);
 					if (data.value != 'ERROR') {
-						// TODO
+						var i = 1;
+						$.each($.parseJSON(data.value), function() {
+							if (i > 0) {
+								$('#course .course-reviews-content').html('');
+								i--;
+							}
+							$('#course .course-reviews-content').append('<span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span><br /><br />');
+						});
 					}
 					$('#course .course-reviews').show();
 					$('.ui-loader').hide();
@@ -408,6 +423,30 @@ var NoppaCRA = {
 			);
 			
 		});
+	
+	},
+	
+	updateReviews : function() {
+	
+		var info = window.location.hash.split('+');
+	
+		$.post('auth/', { method: 'course', faculty: info[1], department: info[2], course: info[3] },
+			function(data) {
+				console.log(data.value);
+				if (data.value != 'ERROR') {
+					var i = 1;
+					$.each($.parseJSON(data.value), function() {
+						if (i > 0) {
+							$('#course .course-reviews-content').html('');
+							i--;
+						}
+						$('#course .course-reviews-content').append('<span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span><br /><br />');
+					});
+				}
+				$('#course .course-reviews').show();
+				$('.ui-loader').hide();
+			}, "json"
+		);
 	
 	},
 	
@@ -572,12 +611,15 @@ var NoppaCRA = {
 			$.post('noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/', { comment: comment, grade: grade },
 				function(data) {
 					console.log(data);
-					if (data.value == 'evaluation done') {
+					if (data == 'evaluation done') {
+						NoppaCRA.updateReviews();
+						$('#review-collapsible').trigger('collapse');
+						$('#reviews-collapsible').trigger('expand');
 						$('.ui-loader').hide();
 					} else {
 						$('.ui-loader').hide();
 					}
-				}, "json"
+				}
 			);
 			
 			return false;
