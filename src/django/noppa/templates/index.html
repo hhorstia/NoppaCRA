@@ -86,8 +86,10 @@
 				<label for="password">Password:</label>
 				<input type="password" name="password" id="password" value="" placeholder="Password" />
 			</div>
-			<button type="submit" name="submit" data-theme="b">Login</button>
-			<button type="submit" name="submit" disabled="disabled">Register</button>
+			<p class="login-error">Login error, please check your credentials!</p>
+			<p class="registration-error">Registration error, please check your credentials!</p>
+			<button id="login-button" type="submit" name="submit" data-theme="b">Login</button>
+			<button id="register-button" type="submit" name="submit" disabled="disabled">Register</button>
 		</form>
 	</div>
 

@@ -6,6 +6,11 @@ input.ui-input-text, textarea.ui-input-text {
 	line-height: 1 !important;
 }
 
+.login-error, .registration-error {
+	color: red;
+	display: none;
+}
+
 .page {
 	display: none;
 }

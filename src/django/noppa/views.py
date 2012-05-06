@@ -213,6 +213,25 @@ class Auth(View):
         if request.POST['method'] == 'authenticated':
             response_data['value'] = request.user.is_authenticated()
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+        
+        
+        # reserved - returns an indication whether the username is taken
+        
+        elif request.POST['method'] == 'reserved':
+            username = request.POST['username']
+            
+            # check the length of username:
+            if len(username) == 0 or len(username) > 50:
+                response_data['value'] = 'ERROR_LEN'
+                return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+            
+            try:
+                user = User.objects.get(username__exact=username)
+                response_data['value'] = 'RESERVED' # if previous get succeeded, a user with that username already exists
+                return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+            except User.DoesNotExist:
+                response_data['value'] = 'OK'
+                return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
     
     
         # login - logs in the user with provided username and password
@@ -260,7 +279,7 @@ class Auth(View):
                 return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
             except User.DoesNotExist:
                 user = User.objects.create_user(username, username, password) # create new user
-    
+                
                 if user != None:
                     response_data['value'] = 'OK'
                     user = authenticate(username=username, password=password)

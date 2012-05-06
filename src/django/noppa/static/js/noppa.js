@@ -383,7 +383,31 @@ var NoppaCRA = {
 			NoppaCRA.searchRefresh = true;
 		});
 		
+		$('#username').blur(function() {
+		
+			var usernameString = $('#username').val();
+			if (usernameString != '') {
+				
+				$.post('auth/', { method: 'reserved', username: usernameString },
+					function(data) {
+						console.log('Check for: ' + usernameString + ' ' + data.method + ' returns ' + data.value + '.');
+						if (data.value == 'OK') {
+							$('#register-button').button('enable');
+						} else {
+							$('#register-button').button('disable');
+						}
+						$('.ui-loader').hide();
+					}, "json"
+				);
+			
+			}
+			return false;
+		
+		});
+		
 		$('#authenticate').submit(function() {
+		
+			$('#login .login-error, #login .registration-error').hide();
 			
 			var usernameString = $('#username').val();
 			var passwordString = $('#password').val();	
@@ -395,10 +419,10 @@ var NoppaCRA = {
 				$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
 					function(data) {
 						console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
-						if (data.value) {
+						if (data.value == 'OK') {
 							
 						} else {
-							$('#login').append('Login failed. Check your credentials!');
+							$('#login .login-error').show();
 						}
 						$('.ui-loader').hide();
 					}, "json"
