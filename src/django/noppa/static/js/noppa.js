@@ -214,13 +214,16 @@ var NoppaCRA = {
 					
 					$.each(data, function() {
 						var identifier = this.code.replace(',', '-').replace('.', '-');
-						var faculties = localStorage.getItem('faculties').split(',');
-						var checked = '';
-						for (var i = 0; i < faculties.length; i++) {
-							if (this.code == faculties[i]) {
-								checked = 'checked="checked" ';
-								if (!callback) {
-									NoppaCRA.searchRefresh = true;
+						var faculties = localStorage.getItem('faculties')
+						if (faculties && faculties != 'null' && typeof(faculties) != 'null') {
+							faculties = faculties.split(',');
+							var checked = '';
+							for (var i = 0; i < faculties.length; i++) {
+								if (this.code == faculties[i]) {
+									checked = 'checked="checked" ';
+									if (!callback) {
+										NoppaCRA.searchRefresh = true;
+									}
 								}
 							}
 						}
