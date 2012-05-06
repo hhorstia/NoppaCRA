@@ -34,7 +34,8 @@ input.ui-input-text, textarea.ui-input-text {
 }
 
 #search .name {
-	
+	overflow: hidden;
+	margin-right: 15px;
 }
 
 #search .code {
@@ -62,4 +63,17 @@ input.ui-input-text, textarea.ui-input-text {
 	/*left: 100%;*/
 	/*background: #222222;*/
 	z-index: 2;
+}
+
+#course h3 {
+	margin-top: 0;
+	margin-bottom: 10px;
+	display: inline-block;
+}
+
+#course h4 {
+	color: #bbbbbb;
+	margin-top: 0;
+	margin-right: 10px;
+	display: inline-block;
 }

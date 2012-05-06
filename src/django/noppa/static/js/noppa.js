@@ -56,11 +56,25 @@ var NoppaCRA = {
 			console.log(hash + ' view called');
 			
 			var courseRefresh = false;
+			var coursePage = false;
 			
 			$('.page').hide();
-			console.log(hash.startsWith('#course'));
-			
+						
 			if (hash.startsWith('#course')) {
+			
+				coursePage = true;
+				$('.ui-loader').show();
+			
+				var info = hash.split('+');
+			
+				jQuery.ajax({
+					type: 'GET',
+					url: '../noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
+				}).done(function(data) {
+					console.log(data);
+					$('.ui-loader').hide();
+				});
+			
 				/*$('#search').show();*/
 				$('#course').show();
 				/*$('#course').animate({
@@ -114,9 +128,8 @@ var NoppaCRA = {
 					break;
 			}
 			
-			if (!courseRefresh) {
+			if (!courseRefresh && !coursePage) {
 				$('.ui-loader').hide();
-				courseRefresh = false;
 			}
 			NoppaCRA.loading = false;
 		});
@@ -144,19 +157,19 @@ var NoppaCRA = {
 		}).done(function(data) {
 			//console.log(data);
 			/*$.each(data, function() {
-				NoppaCRA.addResult(this.code, this.name, this.grade, 'a803', 'Muotoilun laitos');
+				NoppaCRA.addResult(this.code, this.name, this.grade, 'taik', 'a803', 'Muotoilun laitos');
 			});*/
 			$('#search ul').html('<li data-role="list-divider">Muotoilun laitos</li>');
-			NoppaCRA.addResults(data, 'a803', 'Muotoilun laitos');
+			NoppaCRA.addResults(data, 'taik', 'a803', 'Muotoilun laitos');
 			$('.ui-loader').hide();
 		});
 		
 	},
 	
-	addResult : function(code, name, grade, fcode, fname) {
+	addResult : function(code, name, grade, scode, fcode, fname) {
 		var identifier = code.replace('.', '-').replace(',', '-');
 		$('#search ul').append('<li>' 
-								+ '<a href="#course-' + identifier + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
+								+ '<a href="#course+' + scode + '+' + fcode + '+' + code + '" data-school-code="' + scode + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
 									+ '<div class="name">' + name + '</div>' 
 									+ '<div class="code">' + code + '</div>'
 									+ '<div id="' + identifier + '" class="stars"></div>'
@@ -173,14 +186,14 @@ var NoppaCRA = {
 		$('#search ul').listview('refresh');
 	},
 	
-	addResults : function(data, fcode, fname) {
+	addResults : function(data, scode, fcode, fname) {
 		var markup = '';
 		var identifiers = new Array();
 		var grades = new Array();
 		$.each(data, function() {
 			var identifier = this.code.replace('.', '-').replace(',', '-');
 			var item = '<li>' 
-						+ '<a href="#course-' + identifier + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
+						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
 							+ '<div class="name">' + this.name + '</div>' 
 							+ '<div class="code">' + this.code + '</div>'
 							+ '<div id="' + identifier + '" class="stars"></div>'
@@ -211,14 +224,19 @@ var NoppaCRA = {
 			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
 			console.log(NoppaCRA.searchLastScrollTop);
 			
+			$('#course-code').html($(this).children('.code').html());
+			$('#course-name').html($(this).children('.name').html());
+			
 			window.location.hash = $(this).attr('href');
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
 				$(this).removeClass('ui-btn-active');
 			});
+			$('#search ul li').removeClass('ui-btn-active');
+			clearTimeout(NoppaCRA.courseTimer);
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
 		
-		$('#search ul li a').live('mousedown touchstart', function() {
+		$('#search ul li a').live('mousedown', function() {
 			$('#search ul li').removeClass('ui-btn-active');
 			clearTimeout(NoppaCRA.courseTimer);
 			$(this).parent().parent().parent().addClass('ui-btn-active');
