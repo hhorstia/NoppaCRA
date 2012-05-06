@@ -43,15 +43,19 @@
 
 <body>
 
-<div data-role="page" data-theme="a">
+<div id="viewport" data-role="page" data-theme="a">
 
-		<div data-role="header" data-id="header" data-position="fixed">
-			<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
-			<h1>Noppa.us</h1>
-			<a href="#login" data-role="button" data-icon="star" data-inline="true" data-mini="true" class="login">Login</a>
-		</div>
+	<div data-role="header" data-id="header" data-position="fixed">
+		<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
+		<h1>Noppa.us</h1>
+		<a href="#login" data-role="button" data-icon="star" data-inline="true" data-mini="true" class="login">Login</a>
+	</div>
+	
+	<div data-role="content" id="course" class="page" data-current-course="">
+		<p>This is the course page</p>
+	</div>
 
-		<div data-role="content" id="home" class="page" style="display: block;">
+	<div data-role="content" id="home" class="page" style="display: block;">
 		<h4 id="greet">Mobile interface for Aalto University Noppa course service</h4>
 		<img src="img/panda.png" />
 		<!--
@@ -78,64 +82,66 @@
 	</div>
 
 	<div data-role="content" id="search" class="page">
-			<ul data-role="listview" data-theme="g" data-divider-theme="d"> <!-- data-filter="true" -->
-				<li data-role="list-divider">Department of Computer Science</li>
-				<li>
-					<a href="#">
-						<div class="name">WWW Applications</div>
-						<div class="code">T-111.5360</div>
-						<div id="T-111-5360" class="stars"></div>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<div class="name">Introduction to Software Engineering</div>
-						<div class="code">T-76.3601</div>
-						<div id="T-76-3601" class="stars"></div>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<div class="name">Interaction Design and Evaluation</div>
-						<div class="code">T-121.5450</div>
-						<div id="T-121-5450" class="stars"></div>
-					</a>
-				</li>
-				<li data-role="list-divider">Department of Media Technology</li>
-				<li>
-					<a href="#">
-						<div class="name">WWW Applications</div>
-						<div class="code">T-111.5360</div>
-						<div id="T-111-5360" class="stars"></div>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<div class="name">Introduction to Software Engineering</div>
-						<div class="code">T-76.3601</div>
-						<div id="T-76-3601" class="stars"></div>
-					</a>
-				</li>
+		<ul data-role="listview" data-theme="g" data-divider-theme="d" data-filter="true" data-filter-placeholder="Search the filtered courses..." data-autodividers="true">
+			<!--
+			<li data-role="list-divider">Department of Computer Science</li>
+			<li>
+				<a href="#course-t-111-5360">
+					<div class="name">WWW Applications</div>
+					<div class="code">T-111.5360</div>
+					<div id="T-111-5360" class="stars"></div>
+				</a>
+			</li>
+			<li>
+				<a href="#course-t-76-3601">
+					<div class="name">Introduction to Software Engineering</div>
+					<div class="code">T-76.3601</div>
+					<div id="T-76-3601" class="stars"></div>
+				</a>
+			</li>
+			<li>
+				<a href="#course-t-121-5450">
+					<div class="name">Interaction Design and Evaluation</div>
+					<div class="code">T-121.5450</div>
+					<div id="T-121-5450" class="stars"></div>
+				</a>
+			</li>
+			<li data-role="list-divider">Department of Media Technology</li>
+			<li>
+				<a href="#course-t-111-5360">
+					<div class="name">WWW Applications</div>
+					<div class="code">T-111.5360</div>
+					<div id="T-111-5360" class="stars"></div>
+				</a>
+			</li>
+			<li>
+				<a href="#course-t-76-3601">
+					<div class="name">Introduction to Software Engineering</div>
+					<div class="code">T-76.3601</div>
+					<div id="T-76-3601" class="stars"></div>
+				</a>
+			</li>
+			-->
+		</ul>
+	</div>
+
+	<div data-role="content" id="sort" class="page">
+		<p>This is the sort page</p>
+	</div>
+
+	<div data-role="content" id="filter" class="page">
+		<p>This is the filter page</p>
+	</div>
+
+	<div data-role="footer" data-id="footer" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#search" data-icon="search" class="search">Search</a></li>
+				<li><a href="#sort" data-icon="grid" class="sort">Sort</a></li>
+				<li><a href="#filter" data-icon="gear" class="filter">Filter</a></li>
 			</ul>
 		</div>
-
-		<div data-role="content" id="sort" class="page">
-			<p>This is the sort page</p>
-		</div>
-
-		<div data-role="content" id="filter" class="page">
-			<p>This is the filter page</p>
-		</div>
-
-		<div data-role="footer" data-id="footer" data-position="fixed">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#search" data-icon="search" class="search">Search</a></li>
-					<li><a href="#sort" data-icon="grid" class="sort">Sort</a></li>
-					<li><a href="#filter" data-icon="gear" class="filter">Filter</a></li>
-				</ul>
-			</div>
-		</div>
+	</div>
 
 </div>
 

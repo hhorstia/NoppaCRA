@@ -23,6 +23,16 @@ input.ui-input-text, textarea.ui-input-text {
 	text-align: center;
 }
 
+#search ul .ui-btn {
+	background: #333333;
+}
+
+#search ul .ui-btn-active {
+	border: none !important;
+	font-weight: normal !important;
+	background: #5393C5 !important;
+}
+
 #search .name {
 	
 }
@@ -41,4 +51,15 @@ input.ui-input-text, textarea.ui-input-text {
 
 #search .stars img {
 	cursor: pointer;
+}
+
+#course {
+	position: fixed;
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	/*padding: 0;*/
+	/*left: 100%;*/
+	/*background: #222222;*/
+	z-index: 2;
 }

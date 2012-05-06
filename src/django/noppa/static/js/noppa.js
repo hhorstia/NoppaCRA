@@ -1,8 +1,21 @@
+String.prototype.startsWith = function(prefix) {
+	return this.indexOf(prefix) === 0;
+}
+
+String.prototype.endsWith = function(suffix) {
+	return this.match(suffix+"$") == suffix;
+}
+
 var NoppaCRA = {
 
 	fresh	: true,
 	ready	: false,
 	loading : false,
+	
+	courseTimer : null,
+	courseRefresh : true,
+	
+	searchLastScrollTop : 0,
 	
 	init : function() {
 	
@@ -41,8 +54,19 @@ var NoppaCRA = {
 		$(window).bind('hashchange', function(event) {
 			var hash = window.location.hash;
 			console.log(hash + ' view called');
+			
+			var courseRefresh = false;
+			
 			$('.page').hide();
-			if (hash != '') {
+			console.log(hash.startsWith('#course'));
+			
+			if (hash.startsWith('#course')) {
+				/*$('#search').show();*/
+				$('#course').show();
+				/*$('#course').animate({
+					left: '0%'
+				}, 1000);*/
+			} else if (hash != '') {
 				$(hash).show();
 			} else {
 				if (!NoppaCRA.fresh) {
@@ -52,63 +76,159 @@ var NoppaCRA = {
 					window.location.hash = '#home';
 				}
 			}
+			
+			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
+				if (hash != $(this).attr('href')) {
+					$(this).removeClass('ui-btn-active');
+				}
+			});
+			
 			switch(hash) {
 				case '#home':
+					$('.home').addClass('ui-btn-active');
 					break;
 				case '#login':
+					$('.login').addClass('ui-btn-active');
 					break;
 				case '#search':
-					NoppaCRA.initSearch();
+					$('.search').addClass('ui-btn-active');
+					NoppaCRA.courseTimer = setTimeout(function() {
+						$('#search ul li').removeClass('ui-btn-active');
+					}, 1000);
+					if (NoppaCRA.courseRefresh) {
+						NoppaCRA.refreshSearch();
+						NoppaCRA.courseRefresh = false;
+						courseRefresh = true;
+					} else {
+						$('body').scrollTop(NoppaCRA.searchLastScrollTop);
+					}
 					break;
 				case '#sort':
+					$('.sort').addClass('ui-btn-active');
 					break;
 				case '#filter':
+					$('.filter').addClass('ui-btn-active');
 					break;
 				default:
 					NoppaCRA.fresh = false;
 					break;
 			}
-			$('.ui-loader').hide();
+			
+			if (!courseRefresh) {
+				$('.ui-loader').hide();
+				courseRefresh = false;
+			}
 			NoppaCRA.loading = false;
+		});
+		
+		NoppaCRA.initEvents();
+		NoppaCRA.ready = true;
+	
+	},
+	
+	refreshSearch : function() {
+	
+		$('.ui-loader').show();
+		$('#search ul').html('').listview('refresh');
+		/*$('#search ul').html('').listview({
+			autodividers: true,
+			autodividersSelector: function(li) {
+				var out = li.children('a').data('faculty-name');
+				return out;
+			}
+		}).listview('refresh');*/
+		
+		jQuery.ajax({
+			type: 'GET',
+			url: '../noppa/taik/a803/'
+		}).done(function(data) {
+			//console.log(data);
+			/*$.each(data, function() {
+				NoppaCRA.addResult(this.code, this.name, this.grade, 'a803', 'Muotoilun laitos');
+			});*/
+			$('#search ul').html('<li data-role="list-divider">Muotoilun laitos</li>');
+			NoppaCRA.addResults(data, 'a803', 'Muotoilun laitos');
+			$('.ui-loader').hide();
+		});
+		
+	},
+	
+	addResult : function(code, name, grade, fcode, fname) {
+		var identifier = code.replace('.', '-').replace(',', '-');
+		$('#search ul').append('<li>' 
+								+ '<a href="#course-' + identifier + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
+									+ '<div class="name">' + name + '</div>' 
+									+ '<div class="code">' + code + '</div>'
+									+ '<div id="' + identifier + '" class="stars"></div>'
+								+ '</a>' +
+								'</li>').trigger('create');
+		if (grade) {
+			$('#' + identifier).raty({
+				half: true,
+				readOnly: true,
+				score: parseInt(grade) * 0.5
+			});
+		}
+		
+		$('#search ul').listview('refresh');
+	},
+	
+	addResults : function(data, fcode, fname) {
+		var markup = '';
+		var identifiers = new Array();
+		var grades = new Array();
+		$.each(data, function() {
+			var identifier = this.code.replace('.', '-').replace(',', '-');
+			var item = '<li>' 
+						+ '<a href="#course-' + identifier + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
+							+ '<div class="name">' + this.name + '</div>' 
+							+ '<div class="code">' + this.code + '</div>'
+							+ '<div id="' + identifier + '" class="stars"></div>'
+						+ '</a>' +
+						'</li>';
+			markup = markup + item;
+			identifiers.push('#' + identifier);
+			grades.push(parseInt(this.grade) * 0.5);
+		});
+		$('#search ul').append(markup).trigger('create');
+		
+		$.each(identifiers, function(index, value) {
+			if (grades[index]) {
+				$('#' + value).raty({
+					half: true,
+					readOnly: true,
+					score: grades[index]
+				});
+			}
+		});
+		
+		$('#search ul').listview('refresh');
+	},
+	
+	initEvents : function() {
+	
+		$('#search ul li a').live('click', function() {
+			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
+			console.log(NoppaCRA.searchLastScrollTop);
+			
+			window.location.hash = $(this).attr('href');
+			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
+				$(this).removeClass('ui-btn-active');
+			});
+			$(this).parent().parent().parent().addClass('ui-btn-active');
+		});
+		
+		$('#search ul li a').live('mousedown touchstart', function() {
+			$('#search ul li').removeClass('ui-btn-active');
+			clearTimeout(NoppaCRA.courseTimer);
+			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
 		
 		$('#authenticate').submit(function() {
 			console.log('form submitted');
 			return false;
 		});
-		
-		NoppaCRA.ready = true;
 	
-	},
-	
-	initSearch : function() {
-	
-		$('#search ul').append('<li>' 
-								+ '<a href="#">'
-									+ '<div class="name">Introduction to Software Engineering</div>' 
-									+ '<div class="code">T-76.3601</div>'
-									+ '<div id="T-76-3601" class="stars"></div>'
-								+ '</a>' +
-								'</li>').trigger('create');
-		$('#search ul').listview('refresh');
-		
-		$('#T-111-5360').raty({
-			half: true,
-			readOnly: true,
-			score: 2.5
-		});
-		/*
-		jQuery.ajax({
-			type: 'GET',
-			url: 'http://127.0.0.1:8000/noppa/taik/a803/',
-			jsonpCallback: 'NoppaCRA.handle',
-			dataType: "jsonp"
-		});
-		*/
-	},
-	
-	handle : function() {
-		alert('a');
 	}
 
 }
