@@ -92,3 +92,11 @@ input.ui-input-text, textarea.ui-input-text {
 #course .course-details p {
 	font-size: 13px;
 }
+
+#filter .ui-btn-text {
+	width: 88%;
+}
+
+#filter .faculties {
+	display: none;
+}

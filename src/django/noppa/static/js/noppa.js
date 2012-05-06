@@ -13,7 +13,9 @@ var NoppaCRA = {
 	loading : false,
 	
 	courseTimer : null,
-	courseRefresh : true,
+	
+	searchRefresh : true,
+	filterRefresh : true,
 	
 	searchLastScrollTop : 0,
 	
@@ -55,7 +57,8 @@ var NoppaCRA = {
 			var hash = window.location.hash;
 			console.log(hash + ' view called');
 			
-			var courseRefresh = false;
+			var searchRefresh = false;
+			var filterRefresh = false;
 			var coursePage = false;
 			
 			$('.page').hide();
@@ -136,10 +139,10 @@ var NoppaCRA = {
 					NoppaCRA.courseTimer = setTimeout(function() {
 						$('#search ul li').removeClass('ui-btn-active');
 					}, 1000);
-					if (NoppaCRA.courseRefresh) {
+					if (NoppaCRA.searchRefresh) {
 						NoppaCRA.refreshSearch();
-						NoppaCRA.courseRefresh = false;
-						courseRefresh = true;
+						NoppaCRA.searchRefresh = false;
+						searchRefresh = true;
 					} else {
 						$('body').scrollTop(NoppaCRA.searchLastScrollTop);
 					}
@@ -149,13 +152,68 @@ var NoppaCRA = {
 					break;
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
+					
+					if (NoppaCRA.filterRefresh) {
+					
+						filterRefresh = true;
+						$('#filter .faculties').hide();
+					
+						jQuery.ajax({
+							type: 'GET',
+							url: '../noppa/'
+						}).done(function(data) {
+							console.log(data);
+							
+							$.each(data, function() {
+								$('#filter .faculties').append(
+									'<div class="' + this.code + '" data-role="fieldcontain">' +
+										'<h4 class="name">' + this.name + '</h4>' +
+										'<fieldset class="group" data-role="controlgroup"></fieldset>' +
+									'</div>');
+									
+								var scode = this.code;
+								
+								jQuery.ajax({
+									type: 'GET',
+									url: '../noppa/' + this.code + '/'
+								}).done(function(data) {
+									console.log(data);
+									console.log(scode);
+									
+									$.each(data, function() {
+										var identifier = this.code.replace(',', '-').replace('.', '-');
+										$('#filter .faculties .' + scode + ' .group').append(
+											'<input type="checkbox" name="checkbox-' + identifier + '" id="checkbox-' + identifier + '" class="custom" data-mini="true" data-theme="c" data-faculty-code="' + this.code + '" />' +
+											'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
+									});
+									
+									$('#filter .faculties .' + scode).trigger('create');
+									
+									$('#filter .faculties').show();
+									$('.ui-loader').hide();
+									
+								});
+								
+							});
+							
+						});
+						
+						NoppaCRA.filterRefresh = false;
+					
+					}
+					
+					/*<div class="ui-controlgroup-controls">
+						<input type="checkbox" name="checkbox-0" id="checkbox-0" class="custom" data-mini="true" />
+						<label for="checkbox-0">I agree</label>
+					</div>*/
+					
 					break;
 				default:
 					NoppaCRA.fresh = false;
 					break;
 			}
 			
-			if (!courseRefresh && !coursePage) {
+			if (!searchRefresh && !coursePage && !filterRefresh) {
 				$('.ui-loader').hide();
 			}
 			NoppaCRA.loading = false;

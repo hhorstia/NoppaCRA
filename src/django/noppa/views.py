@@ -94,7 +94,8 @@ class Noppa(View):
             avg_grade = Evaluation.objects.filter(faculty = faculty).filter(department = department).filter(course = course).aggregate(Avg('grade'))
             
             course_dict = {
-                'grade': avg_grade['grade__avg']
+                'grade': avg_grade['grade__avg'],
+                'name': ''
             }
             
             for description in descriptions:
@@ -113,8 +114,9 @@ class Noppa(View):
             
             response_list.append(course_dict)
         
-        response_list = sorted(response_list, key=lambda item: item['grade'])
-        response_list.reverse()
+        response_list = sorted(response_list, key=lambda item: item['name'])
+        '''response_list = sorted(response_list, key=lambda item: item['grade'])'''
+        '''response_list.reverse()'''
         
         return HttpResponse(json.dumps(response_list,
                                        ensure_ascii = False),
