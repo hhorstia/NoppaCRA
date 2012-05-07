@@ -84,7 +84,7 @@ class Noppa(View):
                 slug_name = course.get('href').split('/')[-2]
                 
                 #get the average grade for department
-                avg_grade = Evaluation.objects.filter(faculty = faculty).filter(department = department).filter(course = slug_name).aggregate(Avg('grade'))
+                avg_grade = Evaluation.objects.filter(course = slug_name).aggregate(Avg('grade')) #.filter(faculty = faculty).filter(department = department)
                 
                 response_list.append({
                     'code': slug_name,

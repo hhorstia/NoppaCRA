@@ -417,6 +417,8 @@ var NoppaCRA = {
 			if (identifier != '') {
 				identifiers.push('#' + identifier);
 			}
+			console.log(this);
+			console.log(this.grade);
 			grades.push(parseInt(this.grade) * 0.5);
 		});
 		markup = '<li data-role="list-divider">' + fname + '</li>' + markup;
@@ -445,12 +447,12 @@ var NoppaCRA = {
 						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
 							+ '<div class="name">' + this.name + '</div>'
 							+ '<div class="code">' + this.code + '</div>'
-							+ '<div id="' + identifier + '-2" class="stars"></div>'
+							+ '<div id="' + identifier + '" class="stars"></div>'
 						+ '</a>' +
 						'</li>';
 			markup = markup + item;
 			if (identifier != '') {
-				identifiers.push('#' + identifier + '-2');
+				identifiers.push('#' + identifier);
 			}
 			grades.push(parseInt(this.grade) * 0.5);
 		});
