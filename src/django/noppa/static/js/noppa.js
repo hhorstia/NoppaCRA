@@ -68,7 +68,17 @@ var NoppaCRA = {
 			var reviewPage = false;
 			
 			$('.page').hide();
-						
+			
+			// TODO
+			$('#header .home').data('icon', 'home').data('iconpos', 'notext').data('mini', '');
+			$('#header .home').removeClass('ui-mini').addClass('ui-btn-icon-notext').removeClass('ui-btn-icon-left');
+			
+			$('#header .home').children('span').children('.ui-btn-text').html('Home');
+			$('#header .home').children('span').children('.ui-icon').addClass('ui-icon-home').removeClass('ui-icon-arrow-l');
+			
+			$('#header .home').attr('href', '#home');
+			$('#header .home').trigger('create');
+			
 			if (hash.startsWith('#course')) {
 			
 				coursePage = true;
@@ -352,6 +362,16 @@ var NoppaCRA = {
 	loadCourse : function() {
 	
 		$('.ui-loader').show();
+		
+		// TODO
+		$('#header .home').data('icon', 'arrow-l').data('iconpos', '').data('mini', 'true');
+		$('#header .home').addClass('ui-mini').removeClass('ui-btn-icon-notext').addClass('ui-btn-icon-left');
+		
+		$('#header .home').children('span').children('.ui-btn-text').html('Back');
+		$('#header .home').children('span').children('.ui-icon').removeClass('ui-icon-home').addClass('ui-icon-arrow-l');
+		
+		$('#header .home').attr('href', '#search');
+		$('#header .home').trigger('create');
 		
 		$('#course .course-review, #course .course-reviews').hide();
 		$('#course .course-reviews-content').html('<span>No reviews.</span>');
