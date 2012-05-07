@@ -550,7 +550,6 @@ var NoppaCRA = {
 			previous = '';
 		}
 		previous = previous.split(',');
-		console.log(previous);
 		$.each(previous, function() {
 			if (this != '') {
 				$('.' + this.replace('.', '-').replace(',', '-')).css('display', 'none');
