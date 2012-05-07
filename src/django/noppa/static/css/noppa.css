@@ -28,38 +28,38 @@ input.ui-input-text, textarea.ui-input-text {
 	text-align: center;
 }
 
-#search ul .ui-btn {
+#search ul .ui-btn, #pure-search ul .ui-btn {
 	background: #333333;
 }
 
-#search ul .ui-btn-active {
+#search ul .ui-btn-active, #pure-search ul .ui-btn-active {
 	border: none !important;
 	font-weight: normal !important;
 	background: #5393C5 !important;
 }
 
-#search .name {
+#search .name, #pure-search .name {
 	overflow: hidden;
 	margin-right: 15px;
 }
 
-#search .code {
+#search .code, #pure-search .code {
 	display: inline-block;
 	font-size: 11px;
 	color: #bbbbbb;
 	min-width: 57px;
 }
 
-#search .stars {
+#search .stars, #pure-search .stars {
 	display: inline-block;
 	margin: 5px 5px 0 5px;
 }
 
-#search .stars img {
+#search .stars img, #pure-search .stars img {
 	cursor: pointer;
 }
 
-#search .search-info {
+#search .search-info, #pure-search .search-info {
 	padding: 20px;
 	font-size: 16px;
 }

@@ -144,10 +144,7 @@
 
 	<div data-role="content" id="search" class="page">
 				
-		<label for="search-course">Search Courses:</label>
-		<input type="search" name="search" id="search-course" value="" data-mini="true" />
-		
-		<ul data-role="listview" data-theme="g" data-divider-theme="d" data-filter="false" data-autodividers="true">
+		<ul data-role="listview" data-theme="g" data-divider-theme="d" data-filter="true" data-filter-placeholder="Search the filtered courses..." data-autodividers="true">
 			<!--
 			<li data-role="list-divider">Department of Computer Science</li>
 			<li>
@@ -191,9 +188,20 @@
 	</div>
 
 	<div data-role="content" id="pure-search" class="page">
-		<p></p>
+		<input type="search" name="search" id="search-basic" placeholder="Search for courses..." value="" /><br /><br />
+		<ul data-role="listview" data-theme="g" data-divider-theme="d">
+			<!--
+			<li>
+				<a href="#course-t-76-3601">
+					<div class="name">Introduction to Software Engineering</div>
+					<div class="code">T-76.3601</div>
+					<div id="T-76-3601" class="stars"></div>
+				</a>
+			</li>
+			-->
+		</ul>
 	</div>
-
+	
 	<div data-role="content" id="filter" class="page">
 		<p>In this filter page you can choose the faculties you are interested in -- this only affects the filter tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
 		<div class="faculties"></div>
