@@ -144,11 +144,14 @@ var NoppaCRA = {
 					break;
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
+					var delayedBlacklist = false;
 					if (NoppaCRA.filterRefresh) {
 						filterRefresh = true;
 						NoppaCRA.refreshFilters();
 						NoppaCRA.filterRefresh = false;
+						delayedBlacklist = true;
 					}
+					NoppaCRA.refreshBlacklist(delayedBlacklist);
 					break;
 				case '#reviews':
 					$('.login').addClass('ui-btn-active');
@@ -169,6 +172,37 @@ var NoppaCRA = {
 		
 		NoppaCRA.initEvents();
 		NoppaCRA.ready = true;
+	
+	},
+	
+	refreshBlacklist : function(delayedBlacklist) {
+	
+		$('#blacklist').html('');
+		$('#blacklist').trigger('create').listview('refresh');
+		
+		var blacklist = localStorage.getItem('blacklist');
+		blacklist = blacklist.split(',');
+		
+		if (delayedBlacklist) {
+			$('#blacklist').hide();
+		}
+		
+		$.each(blacklist, function() {
+			var code = this;
+			if (code != '') {
+				$('#blacklist').append(
+						'<div data-role="collapsible" class="blacklist-item">' +
+							'<h3 class="blacklist-item-title"><span class="course"><strong>Course code: </strong>' + code + '</span></h3>' +
+							'<p class="blacklist-item-value">' + '<button class="show-button" type="submit" name="submit" data-theme="f" data-code="' + code + '">Unblacklist</button>' + '</p>' +
+						'</div>');
+			}
+		});
+		$('#blacklist').trigger('create').listview('refresh');
+		if (blacklist.length > 1 && !delayedBlacklist) {
+			$('#blacklist-heading').show();
+		} else {
+			$('#blacklist-heading').hide();
+		}
 	
 	},
 	
@@ -272,6 +306,7 @@ var NoppaCRA = {
 					if (!callback) {
 						$('.ui-loader').hide();
 					}
+					$('#blacklist-heading, #blacklist').show();
 					
 					done++;
 					
@@ -732,6 +767,21 @@ var NoppaCRA = {
 			localStorage.setItem('blacklist', previous);
 			
 			window.location.hash = '#search';
+		});
+		
+		$('#blacklist .show-button').live('click', function() {
+		
+			var previous = localStorage.getItem('blacklist');
+			if (!previous || previous == 'null' || typeof(previous) == 'null') {
+				previous = '';
+			}
+			NoppaCRA.debug ? console.log(previous) : '';
+			previous = previous.replace($(this).data('code') + ',', '');
+			$('.' + $(this).data('code').replace('.', '-').replace(',', '-')).show();
+			NoppaCRA.debug ? console.log(previous) : '';
+			localStorage.setItem('blacklist', previous);
+			
+			$(this).parent().parent().parent().parent().remove();
 		});
 	
 	}

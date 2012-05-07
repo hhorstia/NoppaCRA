@@ -123,16 +123,16 @@ input.ui-input-text, textarea.ui-input-text {
 	display: none;
 }
 
-#reviews #reviews-holder h3 span {
+#reviews #reviews-holder h3 span, #blacklist div h3 span {
 	font-weight: normal;
 }
 
-#reviews #reviews-holder h3 {
+#reviews #reviews-holder h3, #blacklist div h3 {
 	font-size: 13px;
 	font-weight: normal;
 }
 
-#reviews #reviews-holder .ui-collapsible .ui-collapsible-content {
+#reviews #reviews-holder .ui-collapsible .ui-collapsible-content, #blacklist .ui-collapsible .ui-collapsible-content {
 	padding: 10px 16px 1px 16px !important;
 }
 
