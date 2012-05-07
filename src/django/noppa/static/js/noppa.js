@@ -878,7 +878,16 @@ var NoppaCRA = {
 			}
 			NoppaCRA.debug ? console.log(previous) : '';
 			previous = previous.replace($(this).data('code') + ',', '');
-			$('.' + $(this).data('code').replace('.', '-').replace(',', '-')).show();
+			if ($(this).data('code')) {
+				var temp = $(this).data('code').toString();
+				if (temp.indexOf('.') > -1) {
+					temp = $(this).data('code').replace('.', '-');
+				}
+				if (temp.indexOf(',') > -1) {
+					temp = temp.replace(',', '-');
+				}
+				$('.' + temp).show();
+			}
 			NoppaCRA.debug ? console.log(previous) : '';
 			localStorage.setItem('blacklist', previous);
 			
