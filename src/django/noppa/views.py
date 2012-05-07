@@ -128,9 +128,8 @@ class Noppa(View):
             
             response_list.append(course_dict)
         
-        response_list = sorted(response_list, key=lambda item: item['name'])
-        '''response_list = sorted(response_list, key=lambda item: item['grade'])'''
-        '''response_list.reverse()'''
+        sort_by = request.GET.get('sort_by', 'grade')
+        response_list = sorted(response_list, key=lambda item: item[sort_by])
         
         return HttpResponse(json.dumps(response_list,
                                        ensure_ascii = False),
@@ -229,20 +228,18 @@ class Node(View):
 class Search(View):
     
     def get(self, request, search_string = ''):
-        print search_string
         
         soup = BeautifulSoup(urlopen("https://noppa.aalto.fi/noppa/haku/%s" % search_string),
                              from_encoding="utf-8")
-        #print soup
         
             
         course_list = soup.body.find_all('a', 'courses')
         
         #print course_list
         response_list = []
+        
         #create the reponse JSON
         for course in course_list:
-            print course
             
             slug_name = course.get('href').split('/')[-2]
             
@@ -254,6 +251,10 @@ class Search(View):
                 'name': course.string,
                 'grade': avg_grade['grade__avg']
             })
+            
+            
+        sort_by = request.GET.get('sort_by', 'grade')
+        response_list = sorted(response_list, key=lambda item: item[sort_by])
         
         return HttpResponse(json.dumps(response_list,
                                        ensure_ascii = False),
