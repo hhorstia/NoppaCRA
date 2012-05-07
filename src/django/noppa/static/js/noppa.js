@@ -366,7 +366,7 @@ var NoppaCRA = {
 		});
 		
 		if ($('#filter input:checked').length == 0 && !callback) {
-			$('#search ul').html('<p class="search-info">Select interesting faculties from the filter page.</p>').listview('refresh');
+			$('#search ul').html('<p class="search-info">Select interesting faculties from the settings page.</p>').listview('refresh');
 			$('.ui-loader').hide();
 		}
 		
