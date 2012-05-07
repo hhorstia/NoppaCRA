@@ -28,6 +28,9 @@ var NoppaCRA = {
 	
 	authenticated : false,
 	
+	fromPure : true,
+	pureXHR : null,
+	
 	init : function() {
 	
 		window.location.hash = '';
@@ -143,6 +146,14 @@ var NoppaCRA = {
 					break;
 				case '#pure-search':
 					$('.pure-search').addClass('ui-btn-active');
+					
+					NoppaCRA.courseTimerPure = setTimeout(function() {
+						$('#pure-search ul li').removeClass('ui-btn-active');
+					}, 1000);
+					
+					$('body').scrollTop(NoppaCRA.searchLastScrollTopPure);
+					NoppaCRA.blacklist();
+					
 					break;
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
@@ -159,7 +170,6 @@ var NoppaCRA = {
 					$('.login').addClass('ui-btn-active');
 					reviewPage = true;
 					NoppaCRA.refreshReviews();
-					
 					break;
 				default:
 					NoppaCRA.fresh = false;
@@ -412,6 +422,40 @@ var NoppaCRA = {
 		$('#search ul').listview('refresh');
 	},
 	
+	addResultsPure : function(data, scode, fcode, fname) {
+		var markup = '';
+		var identifiers = new Array();
+		var grades = new Array();
+		$.each(data, function() {
+			var identifier = this.code.replace('.', '-').replace(',', '-');
+			var item = '<li class="' + identifier + '">' 
+						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
+							+ '<div class="name">' + this.name + '</div>'
+							+ '<div class="code">' + this.code + '</div>'
+							+ '<div id="' + identifier + '" class="stars"></div>'
+						+ '</a>' +
+						'</li>';
+			markup = markup + item;
+			if (identifier != '') {
+				identifiers.push('#' + identifier);
+			}
+			grades.push(parseInt(this.grade) * 0.5);
+		});
+		$('#pure-search ul').append(markup).trigger('create');
+		
+		$.each(identifiers, function(index, value) {
+			if (grades[index]) {
+				$(value).raty({
+					half: true,
+					readOnly: true,
+					score: grades[index]
+				});
+			}
+		});
+		
+		$('#pure-search ul').listview('refresh');
+	},
+	
 	loadCourse : function() {
 	
 		$('.ui-loader').show();
@@ -423,7 +467,11 @@ var NoppaCRA = {
 		$('#header .home').children('span').children('.ui-btn-text').html('Back');
 		$('#header .home').children('span').children('.ui-icon').removeClass('ui-icon-home').addClass('ui-icon-arrow-l');
 		
-		$('#header .home').attr('href', '#search');
+		if (NoppaCRA.fromPure) {
+			$('#header .home').attr('href', '#pure-search');
+		} else {
+			$('#header .home').attr('href', '#search');
+		}
 		$('#header .home').trigger('create');
 		
 		$('#course .course-review, #course .course-reviews, #course .hide-course').hide();
@@ -563,6 +611,7 @@ var NoppaCRA = {
 	initEvents : function() {
 	
 		$('#search ul li a').live('click', function() {
+			NoppaCRA.fromPure = false;
 			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
 			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTop) : '';
 			
@@ -592,6 +641,7 @@ var NoppaCRA = {
 		});
 		
 		$('#pure-search ul li a').live('click', function() {
+			NoppaCRA.fromPure = true;
 			NoppaCRA.searchLastScrollTopPure = $('body').scrollTop();
 			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTopPure) : '';
 			
@@ -819,7 +869,24 @@ var NoppaCRA = {
 		});
 		
 		$('#pure-search input').live('keyup', function() {
+		
+			var thisHolder = $(this);
 			
+			if ($(this).val() != '' && $(this).val().length > 2) {
+				$('.ui-loader').show();
+				$('#pure-search ul').html('').listview('refresh');
+				if (NoppaCRA.pureXHR) {
+					NoppaCRA.pureXHR.abort();
+				}
+				NoppaCRA.pureXHR = jQuery.ajax({
+					type: 'GET',
+					url: 'search/' + $(this).val().replace(' ', '_')
+				}).done(function(data) {
+					NoppaCRA.addResultsPure(data, 'i', 'i', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+					NoppaCRA.blacklist();
+					$('.ui-loader').hide();
+				});
+			}
 		});
 	
 	}
