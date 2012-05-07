@@ -156,6 +156,11 @@ class Noppa(View):
         
         user = request.user.id
         
+        if faculty == 'null' or department == 'null':
+            r = get_faculty_department(course)
+            faculty = r[0]
+            department = r[1]
+        
         review = Evaluation.objects.filter(user=user, faculty=faculty, department=department, course=course)
         if len(review) > 0:
             review = Evaluation.objects.get(id=review[0].id)
