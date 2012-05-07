@@ -364,7 +364,7 @@ var NoppaCRA = {
 			
 			jQuery.ajax({
 				type: 'GET',
-				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
+				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/' + '?sort_by=' + $('#sort').val()
 			}).done(function(data) {
 				NoppaCRA.addResults(data, /*thisHolder.data('school-code')*/'faculty', /*thisHolder.data('faculty-code')*/'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 				NoppaCRA.blacklist();
@@ -445,12 +445,12 @@ var NoppaCRA = {
 						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
 							+ '<div class="name">' + this.name + '</div>'
 							+ '<div class="code">' + this.code + '</div>'
-							+ '<div id="' + identifier + '" class="stars"></div>'
+							+ '<div id="' + identifier + '-2" class="stars"></div>'
 						+ '</a>' +
 						'</li>';
 			markup = markup + item;
 			if (identifier != '') {
-				identifiers.push('#' + identifier);
+				identifiers.push('#' + identifier + '-2');
 			}
 			grades.push(parseInt(this.grade) * 0.5);
 		});
@@ -910,6 +910,7 @@ var NoppaCRA = {
 		
 		$('#sort').bind('change', function() {
 			localStorage.setItem('sort', $('#sort').val());
+			NoppaCRA.searchRefresh = true;
 		});
 	
 	}
