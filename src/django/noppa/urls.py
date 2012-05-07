@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     (r'^auth/$',
                 Auth.as_view()),
     
-    (r'^search/(?P<search_string>@?[-+_\w]+)$',
+    (r'^search/(?P<search_string>.+)$',
                 Search.as_view()),
     
     (r'^$',
