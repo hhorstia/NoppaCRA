@@ -170,7 +170,30 @@ class Noppa(View):
         new_evaluation.save()
         
         return HttpResponse('evaluation done')
-        
+
+def get_faculty_department(course):
+
+    soup = BeautifulSoup(urlopen("https://noppa.aalto.fi/noppa/kurssi/%s/esite" % course),
+                         from_encoding="utf-8")
+    
+    anchors = soup.find_all('a')
+    faulty = ''
+    department = ''
+    
+    fd_regexp = re.compile('/kurssit/')
+    for a in anchors:
+        link = a.get('href')
+        if fd_regexp.search(link):
+            name = link.split('/')[-1]
+            if name != 'kurssit' and name != '':
+                
+                if len(link.split('/')) == 4:
+                    faculty = link.split('/')[-1]
+                else:
+                    department = link.split('/')[-1]
+                        
+    return (faculty, department)
+
 class Node(View):
     
     def get(self, request, course = ''):
@@ -252,7 +275,7 @@ class Search(View):
                 'grade': avg_grade['grade__avg']
             })
             
-            
+        
         sort_by = request.GET.get('sort_by', 'grade')
         response_list = sorted(response_list, key=lambda item: item[sort_by])
         
