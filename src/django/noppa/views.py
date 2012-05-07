@@ -333,7 +333,8 @@ class Auth(View):
         
         elif request.POST['method'] == 'reviews':
             if request.user.is_authenticated():
-                reviews = Evaluation.objects.filter(user=request.user.id)
+                reviews = Evaluation.objects.filter(user=request.user.id).order_by('id')
+                reviews = reviews.reverse()
                 response_data['value'] = serializers.serialize("json", reviews)
             else:
                 response_data['value'] = 'ERROR'
@@ -362,6 +363,21 @@ class Auth(View):
             course = request.POST['course']
             reviews = Evaluation.objects.filter(faculty=faculty, department=department, course=course)
             response_data['value'] = serializers.serialize("json", reviews)
+            return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
+        
+        
+        # drop - removes the review done by the user for the course
+        
+        elif request.POST['method'] == 'drop':
+            if request.user.is_authenticated():
+                course = request.POST['course']
+                review = Evaluation.objects.filter(user=request.user.id, course=course)
+                if len(review) > 0:
+                    review = Evaluation.objects.get(id=review[0].id)
+                    review.delete()
+                response_data['value'] = 'OK'
+            else:
+                response_data['value'] = 'ERROR'
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
         
         

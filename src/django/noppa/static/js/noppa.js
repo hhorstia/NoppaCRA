@@ -8,6 +8,8 @@ String.prototype.endsWith = function(suffix) {
 
 var NoppaCRA = {
 
+	debug : false,
+
 	fresh	: true,
 	ready	: false,
 	loading : false,
@@ -60,7 +62,7 @@ var NoppaCRA = {
 		
 		$(window).bind('hashchange', function(event) {
 			var hash = window.location.hash;
-			console.log(hash + ' view called');
+			NoppaCRA.debug ? console.log(hash + ' view called') : '';
 			
 			var searchRefresh = false;
 			var filterRefresh = false;
@@ -83,7 +85,7 @@ var NoppaCRA = {
 			
 				coursePage = true;
 				NoppaCRA.loadCourse();
-			
+				
 				/*$('#search').show();*/
 				$('#course').show();
 				/*$('#course').animate({
@@ -188,7 +190,7 @@ var NoppaCRA = {
 		
 		$.post('auth/', { method: 'reviews' },
 			function(data) {
-				console.log(data);
+				NoppaCRA.debug ? console.log(data) : '';
 				if (data.value != 'ERROR') {
 					var i = 1;
 					$.each($.parseJSON(data.value), function() {
@@ -196,7 +198,15 @@ var NoppaCRA = {
 							$('#reviews-holder').html('');
 							i--;
 						}
-						$('#reviews-holder').append('<li><span class="course"><strong>Course code: </strong>' + this.fields.course + '</span><br /><span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span></li>');
+						/* Without the delete button. */
+						//$('#reviews-holder').append('<li><span class="course"><strong>Course code: </strong>' + this.fields.course + '</span><br /><span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span></li>');
+						
+						/* With the delete button. */
+						$('#reviews-holder').append(
+							'<div data-role="collapsible" class="course-detail">' +
+								'<h3 class="course-detail-title"><span class="course"><strong>Course code: </strong>' + this.fields.course + '</span><br /><span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span></h3>' +
+								'<p class="course-detail-value">' + '<button class="remove-button" type="submit" name="submit" data-theme="f" data-code="' + this.fields.course + '">Delete</button>' + '</p>' +
+							'</div>');
 					});
 					$('#reviews-holder').trigger('create').listview('refresh');
 				}
@@ -214,7 +224,7 @@ var NoppaCRA = {
 			type: 'GET',
 			url: 'noppa/'
 		}).done(function(data) {
-			console.log(data);
+			NoppaCRA.debug ? console.log(data) : '';
 			
 			var counter = 0;
 			var done = 0;
@@ -232,8 +242,8 @@ var NoppaCRA = {
 					type: 'GET',
 					url: 'noppa/' + this.code + '/'
 				}).done(function(data) {
-					console.log(data);
-					console.log(scode);
+					NoppaCRA.debug ? console.log(data) : '';
+					NoppaCRA.debug ? console.log(scode) : '';
 					
 					$.each(data, function() {
 						var identifier = this.code.replace(',', '-').replace('.', '-');
@@ -384,7 +394,7 @@ var NoppaCRA = {
 			type: 'GET',
 			url: 'noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
 		}).done(function(data) {
-			//console.log(data);
+			NoppaCRA.debug ? console.log(data) : '';
 			
 			$.each(data, function() {
 			
@@ -421,7 +431,7 @@ var NoppaCRA = {
 			
 				$.post('auth/', { method: 'review', faculty: info[1], department: info[2], course: info[3] },
 					function(data) {
-						console.log(data.value);
+						NoppaCRA.debug ? console.log(data.value) : '';
 						if (data.value != 'ERROR') {
 							$.each($.parseJSON(data.value), function() {
 								$('#rating').val(parseInt(this.fields.grade));
@@ -437,7 +447,7 @@ var NoppaCRA = {
 			
 			$.post('auth/', { method: 'course', faculty: info[1], department: info[2], course: info[3] },
 				function(data) {
-					console.log(data.value);
+					NoppaCRA.debug ? console.log(data.value) : '';
 					if (data.value != 'ERROR') {
 						var i = 1;
 						$.each($.parseJSON(data.value), function() {
@@ -472,7 +482,7 @@ var NoppaCRA = {
 	
 		$.post('auth/', { method: 'course', faculty: info[1], department: info[2], course: info[3] },
 			function(data) {
-				console.log(data.value);
+				NoppaCRA.debug ? console.log(data.value) : '';
 				if (data.value != 'ERROR') {
 					var i = 1;
 					$.each($.parseJSON(data.value), function() {
@@ -494,7 +504,7 @@ var NoppaCRA = {
 	
 		$('#search ul li a').live('click', function() {
 			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
-			console.log(NoppaCRA.searchLastScrollTop);
+			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTop) : '';
 			
 			$('#course-code').html($(this).children('.code').html());
 			$('#course-name').html($(this).children('.name').html());
@@ -526,13 +536,13 @@ var NoppaCRA = {
 			if (!previous || previous == 'null' || typeof(previous) == 'null') {
 				previous = '';
 			}
-			console.log(previous);
+			NoppaCRA.debug ? console.log(previous) : '';
 			if ($(this).is(':checked')) {
 				previous = previous + $(this).data('faculty-code') + ',';
 			} else {
 				previous = previous.replace($(this).data('faculty-code') + ',', '');
 			}
-			console.log(previous);
+			NoppaCRA.debug ? console.log(previous) : '';
 			localStorage.setItem('faculties', previous);
 			NoppaCRA.searchRefresh = true;
 		});
@@ -544,7 +554,7 @@ var NoppaCRA = {
 				
 				$.post('auth/', { method: 'reserved', username: usernameString },
 					function(data) {
-						console.log('Check for: ' + usernameString + ' ' + data.method + ' returns ' + data.value + '.');
+						NoppaCRA.debug ? console.log('Check for: ' + usernameString + ' ' + data.method + ' returns ' + data.value + '.') : '';
 						if (data.value == 'OK') {
 							$('#register-button').button('enable');
 						} else {
@@ -575,7 +585,7 @@ var NoppaCRA = {
 					
 					$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
 						function(data) {
-							console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
+							NoppaCRA.debug ? console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.') : '';
 							if (data.value) {
 								window.location.hash = '#reviews';
 								NoppaCRA.authenticated = true;
@@ -593,7 +603,7 @@ var NoppaCRA = {
 					
 					$.post('auth/', { method: 'register', username: usernameString, password: hex_sha512(passwordString) },
 						function(data) {
-							console.log('Register: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.');
+							NoppaCRA.debug ? console.log('Register: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.') : '';
 							if (data.value == 'OK') {
 								window.location.hash = '#reviews';
 								NoppaCRA.authenticated = true;
@@ -628,7 +638,7 @@ var NoppaCRA = {
 			
 			$.post('auth/', { method: 'logout' },
 				function(data) {
-					console.log('Logout: ' + data.method + ' returns ' + data.value + '.');
+					NoppaCRA.debug ? console.log('Logout: ' + data.method + ' returns ' + data.value + '.') : '';
 					if (data.value == 'OK') {
 						window.location.hash = '#login';
 						$('#logged-in-user, #reviews-holder').html('');
@@ -655,7 +665,7 @@ var NoppaCRA = {
 			
 			$.post('noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/', { comment: comment, grade: grade },
 				function(data) {
-					console.log(data);
+					NoppaCRA.debug ? console.log(data) : '';
 					if (data == 'evaluation done') {
 						NoppaCRA.updateReviews();
 						$('#review-collapsible').trigger('collapse');
@@ -669,6 +679,24 @@ var NoppaCRA = {
 			
 			return false;
 		
+		});
+		
+		$('#reviews-holder .remove-button').live('click', function() {
+		
+			var thisHolder = $(this);
+			$('.ui-loader').show();
+			$.post('auth/', { method: 'drop', course: $(this).data('code') },
+				function(data) {
+					NoppaCRA.debug ? console.log(data.value) : '';
+					if (data.value == 'OK') {
+						thisHolder.parent().parent().parent().parent().remove();
+						$('.ui-loader').hide();
+					} else {
+						$('.ui-loader').hide();
+					}
+				}
+			);
+			return false;
 		});
 	
 	}
