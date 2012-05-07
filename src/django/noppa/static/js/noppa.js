@@ -358,7 +358,7 @@ var NoppaCRA = {
 				type: 'GET',
 				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
 			}).done(function(data) {
-				NoppaCRA.addResults(data, /*thisHolder.data('school-code')*/'i', /*thisHolder.data('faculty-code')*/'i', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+				NoppaCRA.addResults(data, /*thisHolder.data('school-code')*/'faculty', /*thisHolder.data('faculty-code')*/'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 				NoppaCRA.blacklist();
 				$('.ui-loader').hide();
 			});
@@ -887,7 +887,7 @@ var NoppaCRA = {
 					type: 'GET',
 					url: 'search/' + $(this).val().replace(' ', '_')
 				}).done(function(data) {
-					NoppaCRA.addResultsPure(data, 'i', 'i', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+					NoppaCRA.addResultsPure(data, 'faculty', 'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 					NoppaCRA.blacklist();
 					$('.ui-loader').hide();
 				});
