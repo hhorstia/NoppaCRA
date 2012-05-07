@@ -331,6 +331,7 @@ var NoppaCRA = {
 	
 		$('.ui-loader').show();
 		$('#search ul').html('').listview('refresh');
+		$('#search input').val('');
 		
 		$('#filter input:checked').each(function() {
 			
