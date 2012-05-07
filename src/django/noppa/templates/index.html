@@ -35,7 +35,7 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
 	<link rel="stylesheet" href="static/css/noppa.css" />
 	
-	<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 	<script src="static/lib/raty/js/jquery.raty.min.js"></script>
 	<script src="static/lib/sha512/sha512.js"></script>
@@ -47,7 +47,7 @@
 
 <div id="viewport" data-role="page" data-theme="a">
 
-	<div id="header" data-role="header" data-id="header" data-position="fixed">
+	<div id="header" data-role="header" data-id="header" data-position="fixed" data-tap-toggle="false">
 		<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
 		<!--<a href="#search" data-role="button" data-icon="arrow-l" data-inline="true" data-mini="true" id="back">Back</a>-->
 		<h1>Noppa.us</h1>
@@ -216,11 +216,11 @@
 		<div id="blacklist" data-role="listview" data-inset="true"></div>
 	</div>
 
-	<div data-role="footer" data-id="footer" data-position="fixed">
-		<div data-role="navbar">
+	<div data-role="footer" data-id="footer" data-position="fixed" data-tap-toggle="false">
+		<div id="navbar" data-role="navbar">
 			<ul>
 				<li><a href="#pure-search" data-icon="search" class="pure-search">Search</a></li>
-				<li><a href="#filter" data-icon="gear" class="filter">Filter & Sort</a></li>
+				<li><a href="#filter" data-icon="gear" class="filter">Filter &amp Sort</a></li>
 				<li><a href="#search" data-icon="grid" class="search">Courses</a></li>
 			</ul>
 		</div>

@@ -47,14 +47,14 @@ var NoppaCRA = {
 			//$('.' + data.toPage[0].id).addClass('ui-btn-active');
 		});
 		
-		$('[data-role="header"] a, [data-role="navbar"] a').live('click', function(event) {
+		$('#header a, #navbar a').live('click', function(event) {
 			$(this).addClass('ui-btn-active');
 			if (window.location.hash != this.hash) {
 				NoppaCRA.loading = true;
 				$('.ui-loader').show();
 				
 				var hash = this.hash;
-				$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
+				$('#header a, #navbar a').each(function() {
 					if (hash != $(this).attr('href')) {
 						$(this).removeClass('ui-btn-active');
 					}
@@ -417,8 +417,6 @@ var NoppaCRA = {
 			if (identifier != '') {
 				identifiers.push('#' + identifier);
 			}
-			console.log(this);
-			console.log(this.grade);
 			grades.push(parseInt(this.grade) * 0.5);
 		});
 		markup = '<li data-role="list-divider">' + fname + '</li>' + markup;
