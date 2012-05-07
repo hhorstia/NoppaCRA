@@ -287,6 +287,10 @@ class Search(View):
         sort_by = request.GET.get('sort_by', 'grade')
         response_list = sorted(response_list, key=lambda item: item[sort_by])
         
+        if sort_by == 'grade':
+            response_list.reverse()
+        
+        
         return HttpResponse(json.dumps(response_list,
                                        ensure_ascii = False),
                             content_type = 'application/json')
