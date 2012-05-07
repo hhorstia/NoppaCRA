@@ -181,6 +181,9 @@ var NoppaCRA = {
 		$('#blacklist').trigger('create').listview('refresh');
 		
 		var blacklist = localStorage.getItem('blacklist');
+		if (!blacklist || blacklist == 'null' || typeof(blacklist) == 'null') {
+			blacklist = '';
+		}
 		blacklist = blacklist.split(',');
 		
 		if (delayedBlacklist) {
