@@ -445,12 +445,12 @@ var NoppaCRA = {
 						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
 							+ '<div class="name">' + this.name + '</div>'
 							+ '<div class="code">' + this.code + '</div>'
-							+ '<div id="' + identifier + '" class="stars"></div>'
+							+ '<div id="' + identifier + '-2" class="stars"></div>'
 						+ '</a>' +
 						'</li>';
 			markup = markup + item;
 			if (identifier != '') {
-				identifiers.push('#' + identifier);
+				identifiers.push('#' + identifier + '-2');
 			}
 			grades.push(parseInt(this.grade) * 0.5);
 		});
@@ -936,7 +936,11 @@ var NoppaCRA = {
 			$('#pure-search input').keyup();
 			NoppaCRA.searchRefresh = true;
 		});
-	
+		
+		$('#pure-search .ui-input-clear').live('click', function() {
+			$('#pure-search ul').html('');
+		});
+		
 	}
 
 }
