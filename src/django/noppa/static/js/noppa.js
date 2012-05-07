@@ -65,6 +65,14 @@ var NoppaCRA = {
 			$(this).addClass('ui-btn-active');
 		});
 		
+		var previous = localStorage.getItem('sort');
+		if (!previous || previous == 'null' || typeof(previous) == 'null') {
+			previous = '';
+		}
+		if (previous != '') {
+			$('#sort').val(previous);
+		}
+		
 		$(window).bind('hashchange', function(event) {
 			var hash = window.location.hash;
 			NoppaCRA.debug ? console.log(hash + ' view called') : '';
@@ -898,6 +906,10 @@ var NoppaCRA = {
 			} else {
 				$('#pure-search ul').html('').listview('refresh');
 			}
+		});
+		
+		$('#sort').bind('change', function() {
+			localStorage.setItem('sort', $('#sort').val());
 		});
 	
 	}
