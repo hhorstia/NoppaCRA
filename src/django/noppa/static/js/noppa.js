@@ -886,6 +886,8 @@ var NoppaCRA = {
 					NoppaCRA.blacklist();
 					$('.ui-loader').hide();
 				});
+			} else {
+				$('#pure-search ul').html('').listview('refresh');
 			}
 		});
 	
