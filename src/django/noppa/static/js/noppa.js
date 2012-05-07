@@ -303,7 +303,7 @@ var NoppaCRA = {
 				
 				jQuery.ajax({
 					type: 'GET',
-					url: 'noppa/' + this.code + '/'
+					url: 'noppa/' + this.code + '/?sort_by=name'
 				}).done(function(data) {
 					NoppaCRA.debug ? console.log(data) : '';
 					NoppaCRA.debug ? console.log(scode) : '';
@@ -897,7 +897,7 @@ var NoppaCRA = {
 				}
 				NoppaCRA.pureXHR = jQuery.ajax({
 					type: 'GET',
-					url: 'search/' + $(this).val().replace(' ', '_')
+					url: 'search/' + $(this).val().replace(' ', '_') + '?sort_by=' + $('#sort').val()
 				}).done(function(data) {
 					NoppaCRA.addResultsPure(data, 'faculty', 'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 					NoppaCRA.blacklist();
