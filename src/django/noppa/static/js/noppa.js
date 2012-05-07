@@ -139,8 +139,8 @@ var NoppaCRA = {
 					}
 					NoppaCRA.blacklist();
 					break;
-				case '#sort':
-					$('.sort').addClass('ui-btn-active');
+				case '#pure-search':
+					$('.pure-search').addClass('ui-btn-active');
 					break;
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
