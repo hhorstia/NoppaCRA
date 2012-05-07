@@ -225,6 +225,40 @@ class Node(View):
                                          node_ex_reg = node_ex_reg))
             
         return nodes
+    
+class Search(View):
+    
+    def get(self, request, search_string = ''):
+        print search_string
+        
+        soup = BeautifulSoup(urlopen("https://noppa.aalto.fi/noppa/haku/%s" % search_string),
+                             from_encoding="utf-8")
+        #print soup
+        
+            
+        course_list = soup.body.find_all('a', 'courses')
+        
+        #print course_list
+        response_list = []
+        #create the reponse JSON
+        for course in course_list:
+            print course
+            
+            slug_name = course.get('href').split('/')[-2]
+            
+            #get the average grade for department
+            avg_grade = Evaluation.objects.filter(course = slug_name).aggregate(Avg('grade'))
+            
+            response_list.append({
+                'code': slug_name,
+                'name': course.string,
+                'grade': avg_grade['grade__avg']
+            })
+        
+        return HttpResponse(json.dumps(response_list,
+                                       ensure_ascii = False),
+                            content_type = 'application/json')
+
 
 class Auth(View):
     

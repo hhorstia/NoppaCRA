@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from views import Noppa, Node, Auth, Webapp
+from views import Noppa, Node, Auth, Webapp, Search
 
 urlpatterns = patterns('',
     # Examples:
@@ -19,8 +19,12 @@ urlpatterns = patterns('',
     (r'^auth/$',
                 Auth.as_view()),
     
+    (r'^search/(?P<search_string>@?[-+_\w]+)$',
+                Search.as_view()),
+    
     (r'^$',
                 Webapp.as_view()),
+    
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
