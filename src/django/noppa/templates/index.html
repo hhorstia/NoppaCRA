@@ -203,7 +203,13 @@
 	</div>
 	
 	<div data-role="content" id="filter" class="page">
-		<p>In this filter page you can choose the faculties you are interested in -- this only affects the filter tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
+		<label for="sort" class="select">Sorting method:</label>
+		<select name="sort" id="sort">
+		   <option value="name">Alphabetical</option>
+		   <option value="code">Course code</option>
+		   <option value="grade">Grading</option>
+		</select><br />
+		<p>In this settings page you can choose the faculties you are interested in -- this only affects the filter tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
 		<div class="faculties"></div>
 		<br />
 		<p id="blacklist-heading">Here are the blacklisted (hidden) courses.</p>

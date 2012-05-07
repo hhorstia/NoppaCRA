@@ -128,7 +128,7 @@ var NoppaCRA = {
 				case '#search':
 					//$('#pure-search ul').html();
 					//$('#pure-search ul').listview('refresh');
-					//$('.search').addClass('ui-btn-active');
+					$('.search').addClass('ui-btn-active');
 					NoppaCRA.courseTimer = setTimeout(function() {
 						$('#search ul li').removeClass('ui-btn-active');
 					}, 1000);
@@ -358,7 +358,7 @@ var NoppaCRA = {
 				type: 'GET',
 				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
 			}).done(function(data) {
-				NoppaCRA.addResults(data, /*thisHolder.data('school-code')*/'i', /*thisHolder.data('faculty-code')*/'i', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+				NoppaCRA.addResults(data, /*thisHolder.data('school-code')*/'faculty', /*thisHolder.data('faculty-code')*/'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 				NoppaCRA.blacklist();
 				$('.ui-loader').hide();
 			});
@@ -855,7 +855,11 @@ var NoppaCRA = {
 			NoppaCRA.debug ? console.log(previous) : '';
 			localStorage.setItem('blacklist', previous);
 			
-			window.location.hash = '#search';
+			if (NoppaCRA.fromPure) {
+				window.location.hash = '#pure-search';
+			} else {
+				window.location.hash = '#search';
+			}
 		});
 		
 		$('#blacklist .show-button').live('click', function() {
@@ -887,7 +891,7 @@ var NoppaCRA = {
 					type: 'GET',
 					url: 'search/' + $(this).val().replace(' ', '_')
 				}).done(function(data) {
-					NoppaCRA.addResultsPure(data, 'i', 'i', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+					NoppaCRA.addResultsPure(data, 'faculty', 'department', thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
 					NoppaCRA.blacklist();
 					$('.ui-loader').hide();
 				});
