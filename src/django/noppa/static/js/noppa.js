@@ -128,7 +128,7 @@ var NoppaCRA = {
 				case '#search':
 					//$('#pure-search ul').html();
 					//$('#pure-search ul').listview('refresh');
-					//$('.search').addClass('ui-btn-active');
+					$('.search').addClass('ui-btn-active');
 					NoppaCRA.courseTimer = setTimeout(function() {
 						$('#search ul li').removeClass('ui-btn-active');
 					}, 1000);
@@ -855,7 +855,11 @@ var NoppaCRA = {
 			NoppaCRA.debug ? console.log(previous) : '';
 			localStorage.setItem('blacklist', previous);
 			
-			window.location.hash = '#search';
+			if (NoppaCRA.fromPure) {
+				window.location.hash = '#pure-search';
+			} else {
+				window.location.hash = '#search';
+			}
 		});
 		
 		$('#blacklist .show-button').live('click', function() {
