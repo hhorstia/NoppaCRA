@@ -825,6 +825,7 @@ var NoppaCRA = {
 						$('#review-collapsible').trigger('collapse');
 						$('#reviews-collapsible').trigger('expand');
 						$('.ui-loader').hide();
+						$('#pure-search input').keyup();
 					} else {
 						$('.ui-loader').hide();
 					}
@@ -839,14 +840,27 @@ var NoppaCRA = {
 		
 			var thisHolder = $(this);
 			$('.ui-loader').show();
-			$.post('auth/', { method: 'drop', course: $(this).data('code') },
+			
+			$.post('auth/', { method: 'drop', course: $(this).data('code').toString() },
 				function(data) {
 					NoppaCRA.debug ? console.log(data.value) : '';
 					if (data.value == 'OK') {
 						thisHolder.parent().parent().parent().parent().remove();
+						$('#pure-search input').keyup();
 						$('.ui-loader').hide();
 					} else {
-						$('.ui-loader').hide();
+						$.post('auth/', { method: 'drop', course: '0' + thisHolder.data('code').toString() },
+							function(data) {
+								NoppaCRA.debug ? console.log(data.value) : '';
+								if (data.value == 'OK') {
+									thisHolder.parent().parent().parent().parent().remove();
+									$('#pure-search input').keyup();
+									$('.ui-loader').hide();
+								} else {
+									$('.ui-loader').hide();
+								}
+							}
+						);
 					}
 				}
 			);
@@ -921,6 +935,7 @@ var NoppaCRA = {
 		
 		$('#sort').bind('change', function() {
 			localStorage.setItem('sort', $('#sort').val());
+			$('#pure-search input').keyup();
 			NoppaCRA.searchRefresh = true;
 		});
 	

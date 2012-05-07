@@ -449,7 +449,9 @@ class Auth(View):
                 if len(review) > 0:
                     review = Evaluation.objects.get(id=review[0].id)
                     review.delete()
-                response_data['value'] = 'OK'
+                    response_data['value'] = 'OK'
+                else:
+                    response_data['value'] = 'ERROR'
             else:
                 response_data['value'] = 'ERROR'
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
