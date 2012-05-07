@@ -180,7 +180,15 @@ var NoppaCRA = {
 			function(data) {
 				console.log(data);
 				if (data.value != 'ERROR') {
-					$('#reviews-holder').html(data);
+					var i = 1;
+					$.each($.parseJSON(data.value), function() {
+						if (i > 0) {
+							$('#reviews-holder').html('');
+							i--;
+						}
+						$('#reviews-holder').append('<li><span class="course"><strong>Course code: </strong>' + this.fields.course + '</span><br /><span class="grade"><strong>Grade: </strong>' + this.fields.grade + '</span><br /><span><strong>Comment: </strong>' + this.fields.comment + '</span></li>');
+					});
+					$('#reviews-holder').trigger('create').listview('refresh');
 				}
 				$('.ui-loader').hide();
 			}, "json"
@@ -313,8 +321,8 @@ var NoppaCRA = {
 		$.each(data, function() {
 			var identifier = this.code.replace('.', '-').replace(',', '-');
 			var item = '<li>' 
-						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '">'
-							+ '<div class="name">' + this.name + '</div>' 
+						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
+							+ '<div class="name">' + this.name + '</div>'
 							+ '<div class="code">' + this.code + '</div>'
 							+ '<div id="' + identifier + '" class="stars"></div>'
 						+ '</a>' +
@@ -348,6 +356,9 @@ var NoppaCRA = {
 		$('#course .course-review, #course .course-reviews').hide();
 		$('#course .course-reviews-content').html('<span>No reviews.</span>');
 		var info = window.location.hash.split('+');
+		
+		$('#course .stars-header, #course .stars').hide();
+		$('#course .stars').html('');
 	
 		jQuery.ajax({
 			type: 'GET',
@@ -422,6 +433,15 @@ var NoppaCRA = {
 				}, "json"
 			);
 			
+			if (parseInt($('#course .stars').data('grade')) != -1) {
+				$('#course .stars-header, #course .stars').show();
+				$('#course .stars').raty({
+					half: true,
+					readOnly: true,
+					score: parseInt($('#course .stars').data('grade')) / 2
+				});
+			}
+			
 		});
 	
 	},
@@ -460,6 +480,11 @@ var NoppaCRA = {
 			$('#course-name').html($(this).children('.name').html());
 			$('#course-credits, #course-period').html('');
 			$('#course .course-details').html('');
+			if ($(this).data('grade') != null) {
+				$('#course .stars').data('grade', $(this).data('grade'));
+			} else {
+				$('#course .stars').data('grade', -1);
+			}
 			
 			window.location.hash = $(this).attr('href');
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {

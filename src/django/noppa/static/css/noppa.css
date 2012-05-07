@@ -111,10 +111,18 @@ input.ui-input-text, textarea.ui-input-text {
 	margin-right: 15px;
 }
 
+#course .stars-header, #course .stars {
+	display: none;
+}
+
 #filter .ui-btn-text {
 	width: 88%;
 }
 
 #filter .faculties {
 	display: none;
+}
+
+#reviews #reviews-holder li {
+	font-weight: normal;
 }

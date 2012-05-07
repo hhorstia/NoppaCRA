@@ -57,6 +57,8 @@
 		<h4 id="course-code"></h4> <h3 id="course-name"></h3><br />
 		<h5 id="course-credits"></h5> <h5 id="course-period"></h5>
 		<div data-role="collapsible-set" data-mini="true" class="course-details"></div><br/>
+		<p class="stars-header">Average rating for this course: </p>
+		<div class="stars"></div><br />
 		<div data-role="collapsible-set" data-mini="true" data-theme="e" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="course-reviews">
 			<div data-role="collapsible" id="reviews-collapsible">
 				<h3 class="course-reviews-title">Course reviews</h3>
@@ -128,7 +130,7 @@
 		</form>
 		<br />
 		<p>You can view and manage all the reviews you have made in this page.</p>
-		<div id="reviews-holder"></div>
+		<div id="reviews-holder" data-role="listview" data-inset="true"></div>
 	</div>
 
 	<div data-role="content" id="search" class="page">
