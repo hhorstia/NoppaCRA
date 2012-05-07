@@ -94,6 +94,14 @@
 				</p>
 			</div>
 		</div>
+		<div data-role="collapsible-set" data-mini="true" data-theme="b" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="hide-course">
+			<div data-role="collapsible" id="hide-collapsible">
+				<h3 class="course-review-title">Hide the course</h3>
+				<p class="course-review-content">
+					<button class="hide-button" type="submit" name="submit" data-theme="f" data-code="">Hide</button>
+				</p>
+			</div>
+		</div>
 	</div>
 
 	<div data-role="content" id="home" class="page" style="display: block;">
@@ -183,8 +191,11 @@
 	</div>
 
 	<div data-role="content" id="filter" class="page">
-		<p>In this filter page you can choose the faculties you are interested in.</p>
+		<p>In this filter page you can choose the faculties you are interested in. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
 		<div class="faculties"></div>
+		<br />
+		<p id="blacklist-heading">Here are the blacklisted (hidden) courses.</p>
+		<div id="blacklist" data-role="listview" data-inset="true"></div>
 	</div>
 
 	<div data-role="footer" data-id="footer" data-position="fixed">

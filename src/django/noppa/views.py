@@ -108,6 +108,10 @@ class Noppa(View):
                 'name': ''
             }
             
+            #TODO: should sort the course details by heading
+            descriptions = sorted(descriptions, key=lambda item: item.find_all('td')[0].string.replace('\n', ' '))
+            descriptions.reverse()
+            
             for description in descriptions:
                 desc_id = description['id'] # starts with Any_***
                 cells = description.find_all('td')

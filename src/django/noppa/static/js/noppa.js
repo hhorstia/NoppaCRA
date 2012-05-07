@@ -137,6 +137,7 @@ var NoppaCRA = {
 						NoppaCRA.filterRefresh = false;
 						searchRefresh = true;
 					}
+					NoppaCRA.blacklist();
 					break;
 				case '#sort':
 					$('.sort').addClass('ui-btn-active');
@@ -302,13 +303,14 @@ var NoppaCRA = {
 				url: 'noppa/' + $(this).data('school-code') + '/' + $(this).data('faculty-code') + '/'
 			}).done(function(data) {
 				NoppaCRA.addResults(data, thisHolder.data('school-code'), thisHolder.data('faculty-code'), thisHolder.parent().children('label').children('span').children('.ui-btn-text').html());
+				NoppaCRA.blacklist();
 				$('.ui-loader').hide();
 			});
 			
 		});
 		
 		if ($('#filter input:checked').length == 0 && !callback) {
-			$('#search ul').html('<p class="search-info">Please select the faculties interesting you from the filter page.</p>').listview('refresh');
+			$('#search ul').html('<p class="search-info">Select interesting faculties from the filter page.</p>').listview('refresh');
 			$('.ui-loader').hide();
 		}
 		
@@ -340,7 +342,7 @@ var NoppaCRA = {
 		var grades = new Array();
 		$.each(data, function() {
 			var identifier = this.code.replace('.', '-').replace(',', '-');
-			var item = '<li>' 
+			var item = '<li class="' + identifier + '">' 
 						+ '<a href="#course+' + scode + '+' + fcode + '+' + this.code + '" data-faculty-code="' + fcode + '" data-faculty-name="' + fname + '" data-grade="' + this.grade + '">'
 							+ '<div class="name">' + this.name + '</div>'
 							+ '<div class="code">' + this.code + '</div>'
@@ -383,7 +385,7 @@ var NoppaCRA = {
 		$('#header .home').attr('href', '#search');
 		$('#header .home').trigger('create');
 		
-		$('#course .course-review, #course .course-reviews').hide();
+		$('#course .course-review, #course .course-reviews, #course .hide-course').hide();
 		$('#course .course-reviews-content').html('<span>No reviews.</span>');
 		var info = window.location.hash.split('+');
 		
@@ -472,6 +474,8 @@ var NoppaCRA = {
 				});
 			}
 			
+			$('#course .hide-course').show();
+			
 		});
 	
 	},
@@ -497,6 +501,22 @@ var NoppaCRA = {
 				$('.ui-loader').hide();
 			}, "json"
 		);
+	
+	},
+	
+	blacklist : function() {
+	
+		var previous = localStorage.getItem('blacklist');
+		if (!previous || previous == 'null' || typeof(previous) == 'null') {
+			previous = '';
+		}
+		previous = previous.split(',');
+		console.log(previous);
+		$.each(previous, function() {
+			if (this != '') {
+				$('.' + this.replace('.', '-').replace(',', '-')).css('display', 'none');
+			}
+		});
 	
 	},
 	
@@ -697,6 +717,21 @@ var NoppaCRA = {
 				}
 			);
 			return false;
+		});
+		
+		$('#course .hide-button').live('click', function() {
+			
+			var previous = localStorage.getItem('blacklist');
+			if (!previous || previous == 'null' || typeof(previous) == 'null') {
+				previous = '';
+			}
+			NoppaCRA.debug ? console.log(previous) : '';
+			previous = previous + $('#course-code').html() + ',';
+			$('.' + $('#course-code').html().replace('.', '-').replace(',', '-')).css('display', 'none');
+			NoppaCRA.debug ? console.log(previous) : '';
+			localStorage.setItem('blacklist', previous);
+			
+			window.location.hash = '#search';
 		});
 	
 	}

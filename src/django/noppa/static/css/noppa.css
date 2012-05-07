@@ -103,7 +103,7 @@ input.ui-input-text, textarea.ui-input-text {
 	font-size: 13px;
 }
 
-#course .course-review, #course .course-reviews {
+#course .course-review, #course .course-reviews, #course .hide-course {
 	display: none;
 }
 
@@ -134,6 +134,10 @@ input.ui-input-text, textarea.ui-input-text {
 
 #reviews #reviews-holder .ui-collapsible .ui-collapsible-content {
 	padding: 10px 16px 1px 16px !important;
+}
+
+#filter #blacklist-heading {
+	display: none;
 }
 
 /* Red button for jQuery Mobile. */
