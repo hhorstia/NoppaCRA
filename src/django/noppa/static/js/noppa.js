@@ -15,11 +15,13 @@ var NoppaCRA = {
 	loading : false,
 	
 	courseTimer : null,
+	courseTimerPure : null,
 	
 	searchRefresh : true,
 	filterRefresh : true,
 	
 	searchLastScrollTop : 0,
+	searchLastScrollTopPure : 0,
 	
 	loginButton : false,
 	registerButton : false,
@@ -589,6 +591,35 @@ var NoppaCRA = {
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
 		
+		$('#pure-search ul li a').live('click', function() {
+			NoppaCRA.searchLastScrollTopPure = $('body').scrollTop();
+			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTopPure) : '';
+			
+			$('#course-code').html($(this).children('.code').html());
+			$('#course-name').html($(this).children('.name').html());
+			$('#course-credits, #course-period').html('');
+			$('#course .course-details').html('');
+			if ($(this).data('grade') != null) {
+				$('#course .stars').data('grade', $(this).data('grade'));
+			} else {
+				$('#course .stars').data('grade', -1);
+			}
+			
+			window.location.hash = $(this).attr('href');
+			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
+				$(this).removeClass('ui-btn-active');
+			});
+			$('#pure-search ul li').removeClass('ui-btn-active');
+			clearTimeout(NoppaCRA.courseTimerPure);
+			$(this).parent().parent().parent().addClass('ui-btn-active');
+		});
+		
+		$('#pure-search ul li a').live('mousedown', function() {
+			$('#pure-search ul li').removeClass('ui-btn-active');
+			clearTimeout(NoppaCRA.courseTimerPure);
+			$(this).parent().parent().parent().addClass('ui-btn-active');
+		});
+		
 		$('#filter input').live('change', function() {
 			var previous = localStorage.getItem('faculties');
 			if (!previous || previous == 'null' || typeof(previous) == 'null') {
@@ -785,6 +816,10 @@ var NoppaCRA = {
 			localStorage.setItem('blacklist', previous);
 			
 			$(this).parent().parent().parent().parent().remove();
+		});
+		
+		$('#pure-search input').live('keyup', function() {
+			
 		});
 	
 	}
