@@ -49,7 +49,6 @@
 
 	<div id="header" data-role="header" data-id="header" data-position="fixed" data-tap-toggle="false">
 		<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
-		<!--<a href="#search" data-role="button" data-icon="arrow-l" data-inline="true" data-mini="true" id="back">Back</a>-->
 		<h1>Noppa.us</h1>
 		<a href="#login" data-role="button" data-icon="star" data-inline="true" data-mini="true" class="login">Login</a>
 	</div>
@@ -71,27 +70,27 @@
 		<div data-role="collapsible-set" data-mini="true" data-theme="b" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="course-review">
 			<div data-role="collapsible" id="review-collapsible">
 				<h3 class="course-review-title">Review the course</h3>
-				<p class="course-review-content">
+				<div class="course-review-content">
 					<form id="review" action="#" method="POST">{% csrf_token %}
 						<label for="rating" class="select">Rating:</label>
 						<select name="rating" id="rating">
-						   <option value="10">10</option>
-						   <option value="9">9</option>
-						   <option value="8">8</option>
-						   <option value="7">7</option>
-						   <option value="6">6</option>
-						   <option value="5">5</option>
-						   <option value="4">4</option>
-						   <option value="3">3</option>
-						   <option value="2">2</option>
-						   <option value="1">1</option>
-						   <option value="0">0</option>
+							<option value="10">10</option>
+							<option value="9">9</option>
+							<option value="8">8</option>
+							<option value="7">7</option>
+							<option value="6">6</option>
+							<option value="5">5</option>
+							<option value="4">4</option>
+							<option value="3">3</option>
+							<option value="2">2</option>
+							<option value="1">1</option>
+							<option value="0">0</option>
 						</select><br />
 						<label for="comment">Comment (optional):</label>
 						<textarea name="comment" id="comment"></textarea>
 						<button id="review-button" type="submit" name="submit" data-theme="b">Save the review</button>
 					</form>
-				</p>
+				</div>
 			</div>
 		</div>
 		<div data-role="collapsible-set" data-mini="true" data-theme="b" data-icon="star" data-collapsed-icon="star" data-expanded-icon="star" class="hide-course">
@@ -106,7 +105,7 @@
 
 	<div data-role="content" id="home" class="page" style="display: block;">
 		<h4 id="greet">Mobile interface for Aalto University Noppa course service</h4>
-		<img src="static/img/panda.png" />
+		<img src="static/img/panda.png" alt="Panda" />
 		<!--
 		<h4>The application</h4>
 		<p>Welcome to Noppa.us - a mobile interface for advanced searching and reviewing of Aalto University courses found in the official Noppa course service.</p>
@@ -151,36 +150,7 @@
 				<a href="#course-t-111-5360">
 					<div class="name">WWW Applications</div>
 					<div class="code">T-111.5360</div>
-					<div id="T-111-5360" class="stars"></div>
-				</a>
-			</li>
-			<li>
-				<a href="#course-t-76-3601">
-					<div class="name">Introduction to Software Engineering</div>
-					<div class="code">T-76.3601</div>
-					<div id="T-76-3601" class="stars"></div>
-				</a>
-			</li>
-			<li>
-				<a href="#course-t-121-5450">
-					<div class="name">Interaction Design and Evaluation</div>
-					<div class="code">T-121.5450</div>
-					<div id="T-121-5450" class="stars"></div>
-				</a>
-			</li>
-			<li data-role="list-divider">Department of Media Technology</li>
-			<li>
-				<a href="#course-t-111-5360">
-					<div class="name">WWW Applications</div>
-					<div class="code">T-111.5360</div>
-					<div id="T-111-5360" class="stars"></div>
-				</a>
-			</li>
-			<li>
-				<a href="#course-t-76-3601">
-					<div class="name">Introduction to Software Engineering</div>
-					<div class="code">T-76.3601</div>
-					<div id="T-76-3601" class="stars"></div>
+					<div id="t-111-5360" class="stars"></div>
 				</a>
 			</li>
 			-->
@@ -192,10 +162,10 @@
 		<ul data-role="listview" data-theme="g" data-divider-theme="d">
 			<!--
 			<li>
-				<a href="#course-t-76-3601">
-					<div class="name">Introduction to Software Engineering</div>
-					<div class="code">T-76.3601</div>
-					<div id="T-76-3601" class="stars"></div>
+				<a href="#course-t-111-5360">
+					<div class="name">WWW Applications</div>
+					<div class="code">T-111.5360</div>
+					<div id="t-111-5360" class="stars"></div>
 				</a>
 			</li>
 			-->
@@ -205,9 +175,9 @@
 	<div data-role="content" id="filter" class="page">
 		<label for="sort" class="select">Sorting method:</label>
 		<select name="sort" id="sort">
-		   <option value="name">Alphabetical</option>
-		   <option value="code">Course code</option>
-		   <option value="grade">Grading</option>
+			<option value="name">Alphabetical</option>
+			<option value="code">Course code</option>
+			<option value="grade">Grading</option>
 		</select><br />
 		<p>In this settings page you can choose the faculties you are interested in -- this only affects the courses tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
 		<div class="faculties"></div>

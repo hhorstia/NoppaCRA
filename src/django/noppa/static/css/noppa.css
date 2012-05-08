@@ -140,7 +140,7 @@ input.ui-input-text, textarea.ui-input-text {
 	display: none;
 }
 
-/* Red button for jQuery Mobile. */
+/* Red button for jQuery Mobile. Does not validate with CSS validator. */
 
 .ui-btn-up-f, .ui-btn-hover-f, .ui-btn-down-f {
   color: white;
