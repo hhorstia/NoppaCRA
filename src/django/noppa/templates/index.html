@@ -32,12 +32,22 @@
 	<!-- iPad (Retina, landscape) -->
 	<link href="static/img/apple-touch-startup-image-1496x2048.png" media="(device-width: 1536px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
 	
+	<!--
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	-->
+	
+	<link rel="stylesheet" href="static/lib/mobile/jquery.mobile-1.1.0.min.css" />
 	<link rel="stylesheet" href="static/css/noppa.css" />
 	
+	<!--
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
-	<script src="static/lib/raty/js/jquery.raty.min.js"></script>
+	-->
+	
+	<script src="static/lib/mobile/jquery-1.6.4.min.js"></script>
+	<script src="static/lib/mobile/jquery.mobile-1.1.0.min.js"></script>
+	
+	<script src="static/lib/raty/jquery.raty.min.js"></script>
 	<script src="static/lib/sha256/sha256.js"></script>
 	<script src="static/lib/django/csrf.js"></script>
 	<script src="static/js/noppa.js"></script>
@@ -47,12 +57,14 @@
 
 <div id="viewport" data-role="page" data-theme="a">
 
+	<!-- Fixed Header -->
 	<div id="header" data-role="header" data-id="header" data-position="fixed" data-tap-toggle="false">
 		<a href="#home" data-role="button" data-icon="home" data-iconpos="notext" data-inline="true" class="home ui-btn-active">Home</a>
 		<h1>Noppa.us</h1>
 		<a href="#login" data-role="button" data-icon="star" data-inline="true" data-mini="true" class="login">Login</a>
 	</div>
-	
+
+	<!-- Course View -->
 	<div data-role="content" id="course" class="page" data-current-course="">
 		<h4 id="course-code"></h4> <h3 id="course-name"></h3><br />
 		<h5 id="course-credits"></h5> <h5 id="course-period"></h5>
@@ -103,6 +115,7 @@
 		</div>
 	</div>
 
+	<!-- Home View (Landing View) -->
 	<div data-role="content" id="home" class="page" style="display: block;">
 		<h4 id="greet">Mobile interface for Aalto University Noppa course service</h4>
 		<img src="static/img/panda.png" alt="Panda" />
@@ -115,6 +128,7 @@
 		-->
 	</div>
 
+	<!-- Login View -->
 	<div data-role="content" id="login" class="page">
 		<p>Please login to review courses and view your previous reviews.</p>
 		<form id="authenticate" action="#" method="POST">{% csrf_token %}
@@ -130,7 +144,8 @@
 			<button id="register-button" type="submit" name="submit" disabled="disabled">Register</button>
 		</form>
 	</div>
-	
+
+	<!-- Reviews View -->
 	<div data-role="content" id="reviews" class="page">
 		<p>You are logged in as <b id="logged-in-user"></b>.</p>
 		<form id="logout" action="#" method="POST">{% csrf_token %}
@@ -141,6 +156,38 @@
 		<div id="reviews-holder" data-role="listview" data-inset="true"></div>
 	</div>
 
+	<!-- Search View -->
+	<div data-role="content" id="pure-search" class="page">
+		<input type="search" name="search" id="search-basic" placeholder="Search for courses..." value="" /><br /><br />
+		<ul data-role="listview" data-theme="g" data-divider-theme="d">
+			<!--
+			<li>
+				<a href="#course-t-111-5360">
+					<div class="name">WWW Applications</div>
+					<div class="code">T-111.5360</div>
+					<div id="t-111-5360" class="stars"></div>
+				</a>
+			</li>
+			-->
+		</ul>
+	</div>
+
+	<!-- Filter/Sort View -->
+	<div data-role="content" id="filter" class="page">
+		<label for="sort" class="select">Sorting method:</label>
+		<select name="sort" id="sort">
+			<option value="name">Alphabetical</option>
+			<option value="code">Course code</option>
+			<option value="grade">Grading</option>
+		</select><br />
+		<p>In this settings page you can choose the faculties you are interested in -- this only affects the courses tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
+		<div class="faculties"></div>
+		<br />
+		<p id="blacklist-heading">Here are the blacklisted (hidden) courses.</p>
+		<div id="blacklist" data-role="listview" data-inset="true"></div>
+	</div>
+
+	<!-- Courses View -->
 	<div data-role="content" id="search" class="page">
 				
 		<ul data-role="listview" data-theme="g" data-divider-theme="d" data-filter="true" data-filter-placeholder="Search the filtered courses..." data-autodividers="true">
@@ -157,35 +204,7 @@
 		</ul>
 	</div>
 
-	<div data-role="content" id="pure-search" class="page">
-		<input type="search" name="search" id="search-basic" placeholder="Search for courses..." value="" /><br /><br />
-		<ul data-role="listview" data-theme="g" data-divider-theme="d">
-			<!--
-			<li>
-				<a href="#course-t-111-5360">
-					<div class="name">WWW Applications</div>
-					<div class="code">T-111.5360</div>
-					<div id="t-111-5360" class="stars"></div>
-				</a>
-			</li>
-			-->
-		</ul>
-	</div>
-	
-	<div data-role="content" id="filter" class="page">
-		<label for="sort" class="select">Sorting method:</label>
-		<select name="sort" id="sort">
-			<option value="name">Alphabetical</option>
-			<option value="code">Course code</option>
-			<option value="grade">Grading</option>
-		</select><br />
-		<p>In this settings page you can choose the faculties you are interested in -- this only affects the courses tab. At the end of this page is also a list of the blacklisted (hidden) courses.</p>
-		<div class="faculties"></div>
-		<br />
-		<p id="blacklist-heading">Here are the blacklisted (hidden) courses.</p>
-		<div id="blacklist" data-role="listview" data-inset="true"></div>
-	</div>
-
+	<!-- Fixed Footer -->
 	<div data-role="footer" data-id="footer" data-position="fixed" data-tap-toggle="false">
 		<div id="navbar" data-role="navbar">
 			<ul>
