@@ -709,13 +709,18 @@ var NoppaCRA = {
 						NoppaCRA.debug ? console.log('Check for: ' + usernameString + ' ' + data.method + ' returns ' + data.value + '.') : '';
 						if (data.value == 'OK') {
 							$('#register-button').button('enable');
+							$('#login-button').button('disable');
 						} else {
 							$('#register-button').button('disable');
+							$('#login-button').button('enable');
 						}
 						$('.ui-loader').hide();
 					}, "json"
 				);
 			
+			} else {
+				$('#register-button').button('disable');
+				$('#login-button').button('enable');
 			}
 			return false;
 		
@@ -728,6 +733,16 @@ var NoppaCRA = {
 			var usernameString = $('#username').val();
 			var passwordString = $('#password').val();
 			
+			var passwordHashObject;
+			var passwordHash;
+			
+			/* Warm up the SHA-512 generator. Always gives a biased hash the first time. */
+			passwordHashObject = new jsSHA(passwordString, 'ASCII');
+			passwordHash = passwordHashObject.getHash('SHA-512', 'HEX');
+			
+			passwordHashObject = new jsSHA(passwordString, 'ASCII');
+			passwordHash = passwordHashObject.getHash('SHA-512', 'HEX');
+						
 			if (usernameString != '' && passwordString != '') {
 				
 				if (NoppaCRA.loginButton) {
@@ -735,7 +750,7 @@ var NoppaCRA = {
 					$('.ui-loader').show();
 					NoppaCRA.loginButton = false;
 					
-					$.post('auth/', { method: 'login', username: usernameString, password: hex_sha512(passwordString) },
+					$.post('auth/', { method: 'login', username: usernameString, password: passwordHash },
 						function(data) {
 							NoppaCRA.debug ? console.log('Login: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.') : '';
 							if (data.value) {
@@ -753,7 +768,7 @@ var NoppaCRA = {
 					$('.ui-loader').show();
 					NoppaCRA.registerButton = false;
 					
-					$.post('auth/', { method: 'register', username: usernameString, password: hex_sha512(passwordString) },
+					$.post('auth/', { method: 'register', username: usernameString, password: passwordHash },
 						function(data) {
 							NoppaCRA.debug ? console.log('Register: ' + usernameString + ', ' + passwordString + ': ' + data.method + ' returns ' + data.value + '.') : '';
 							if (data.value == 'OK') {

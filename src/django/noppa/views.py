@@ -341,23 +341,17 @@ class Auth(View):
                 return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
             
             user = authenticate(username=username, password=password) # try to login user
-            time.sleep(0.5)
             
             if user != None:
                 if user.is_active:
                     login(request, user)
-                    time.sleep(0.5)
                     # Success
                     response_data['value'] = request.user.is_authenticated()
                 else:
                     # Disabled account
-                    user = authenticate(username=username, password=password) # try to login user
-                    time.sleep(0.5)
                     response_data['value'] = request.user.is_authenticated()
             else:
                 # Invalid login
-                user = authenticate(username=username, password=password) # try to login user
-                time.sleep(0.5)
                 response_data['value'] = request.user.is_authenticated()
             return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
     
