@@ -736,13 +736,9 @@ var NoppaCRA = {
 			var passwordHashObject;
 			var passwordHash;
 			
-			/* Warm up the SHA-512 generator. Always gives a biased hash the first time. */
-			passwordHashObject = new jsSHA(passwordString, 'ASCII');
-			passwordHash = passwordHashObject.getHash('SHA-512', 'HEX');
+			passwordHashObject = new jsSHA(passwordString);
+			passwordHash = passwordHashObject.getHash('SHA-256', 'HEX');
 			
-			passwordHashObject = new jsSHA(passwordString, 'ASCII');
-			passwordHash = passwordHashObject.getHash('SHA-512', 'HEX');
-						
 			if (usernameString != '' && passwordString != '') {
 				
 				if (NoppaCRA.loginButton) {

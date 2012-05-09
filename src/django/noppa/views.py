@@ -341,7 +341,7 @@ class Auth(View):
                 return HttpResponse(simplejson.dumps(response_data), mimetype="application/json")
             
             user = authenticate(username=username, password=password) # try to login user
-            
+            print password
             if user != None:
                 if user.is_active:
                     login(request, user)
