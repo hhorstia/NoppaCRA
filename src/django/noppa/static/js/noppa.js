@@ -1,3 +1,5 @@
+/* General JS String extensions. */
+
 String.prototype.startsWith = function(prefix) {
 	return this.indexOf(prefix) === 0;
 }
@@ -6,199 +8,292 @@ String.prototype.endsWith = function(suffix) {
 	return this.match(suffix+"$") == suffix;
 }
 
+
+/* The NoppaCRA namespace which wraps everything. */
+
 var NoppaCRA = {
 
-	debug : false,
+	debug : false,			// Mainly enables console logging.
 
-	fresh	: true,
-	ready	: false,
-	loading : false,
+	fresh	: true,			// Used to change the hash to #home on fresh
+							// page reload, detects also inconsistent hash.
+							// -- In that case reloads the site.
 	
-	courseTimer : null,
-	courseTimerPure : null,
 	
-	searchRefresh : true,
-	filterRefresh : true,
+	ready	: false,		// Is the NoppaCRA.init() function executed.
+	loading : false,		// Whether a hash (view) change is taking place.
 	
-	searchLastScrollTop : 0,
-	searchLastScrollTopPure : 0,
 	
-	loginButton : false,
-	registerButton : false,
+	courseTimer : null,		// Course tab timer for the blur
+							// of previously visited course.
 	
-	authenticated : false,
+	courseTimerPure : null,	// Search tab timer for the blur
+							// of previously visited course.
 	
-	fromPure : true,
-	pureXHR : null,
+	
+	searchRefresh : true,	// Course tab view is refreshed when visited.
+	filterRefresh : true,	// Filter and sort tab is refreshed when visited.
+	
+	searchLastScrollTop : 0, // The previous scroll locations of courses and
+	searchLastScrollTopPure : 0, // search tabs respectively.
+	
+	
+	loginButton : false,	// Authentication form was sent with login button.
+	registerButton : false,	// -- with register button.
+	
+	authenticated : false,	// Soft check whether the user is logged in.
+	
+	fromPure : true,		// Did the user access the course details from
+							// the search view (rather than courses view).
+	pureXHR : null,			// Search view ajax call XHR store.
+	
+	
+	/* The init function which is called from the document ready function. */
 	
 	init : function() {
 	
+		/* Reset the hash of the page. */
 		window.location.hash = '';
 		
-		$(document).bind('pagebeforechange', function(event, data) {
-			//NoppaCRA.loading = true;
-			//$('[data-role="header"] a, [data-role="navbar"] a').removeClass('ui-btn-active');
-			//$('.' + data.toPage[0].id).addClass('ui-btn-active');
-		});
 		
-		$(document).bind('pagechange', function(event, data) {
-			//NoppaCRA.loading = false;
-			//$('[data-role="header"] a, [data-role="navbar"] a').removeClass('ui-btn-active');
-			//$('.' + data.toPage[0].id).addClass('ui-btn-active');
-		});
+		/* Bind the navigation buttons (view changers). */
 		
 		$('#header a, #navbar a').live('click', function(event) {
+		
+			/* Set the active class for the button. */
 			$(this).addClass('ui-btn-active');
+			
+			/* React only if the hash is really changing. */
 			if (window.location.hash != this.hash) {
+			
+				/* Set the loading state boolean, show the loading icon. */
 				NoppaCRA.loading = true;
 				$('.ui-loader').show();
 				
+				/* Hash holder, this variable changes in each function. */
 				var hash = this.hash;
+				
+				/* Go through the navigation buttons and remove the active
+				   classes if necessary. This is quite futile, but needed
+				   to avoid some jQuery Mobile bugs. */
 				$('#header a, #navbar a').each(function() {
 					if (hash != $(this).attr('href')) {
 						$(this).removeClass('ui-btn-active');
 					}
 				});
 				
+				/* Set the new hash when a link with new hash is clicked. */
 				window.location.hash = this.hash;
 			}
+			/* Make sure the active class is set. */
 			$(this).addClass('ui-btn-active');
 		});
 		
+		
+		/* Get the sorting method if stored into the local storage. */
 		var previous = localStorage.getItem('sort');
+		
+		/* Detect a null value (sort method not set). */
 		if (!previous || previous == 'null' || typeof(previous) == 'null') {
 			previous = '';
 		}
+		
+		/* Set the sort method to the appropriate user interface element. */
 		if (previous != '') {
 			$('#sort').val(previous);
 		}
 		
+		
+		/* Important hash change binding. Reacts to the view change requests. */
+		
 		$(window).bind('hashchange', function(event) {
+		
+			/* Store the new hash. */
 			var hash = window.location.hash;
+			
+			/* Print the called view name. */
 			NoppaCRA.debug ? console.log(hash + ' view called') : '';
 			
+			/* Some internal variables for the hash change function. */
 			var searchRefresh = false;
 			var filterRefresh = false;
 			var coursePage = false;
 			var reviewPage = false;
 			
+			/* Hide all the views (content divs with page class). */
 			$('.page').hide();
 			
-			// TODO
-			$('#header .home').data('icon', 'home').data('iconpos', 'notext').data('mini', '');
-			$('#header .home').removeClass('ui-mini').addClass('ui-btn-icon-notext').removeClass('ui-btn-icon-left');
+			/* Following lines reset manually the appearance of home button
+			   which is transformed into back button on course detail view.
+			   -- TODO: detect if the button is transformed back button. */
 			
-			$('#header .home').children('span').children('.ui-btn-text').html('Home');
-			$('#header .home').children('span').children('.ui-icon').addClass('ui-icon-home').removeClass('ui-icon-arrow-l');
+			$('#header .home').data('icon', 'home')
+							  .data('iconpos', 'notext').data('mini', '');
+			$('#header .home').removeClass('ui-mini')
+							  .addClass('ui-btn-icon-notext')
+							  .removeClass('ui-btn-icon-left');
+			
+			$('#header .home').children('span').children('.ui-btn-text')
+							  .html('Home');
+			$('#header .home').children('span').children('.ui-icon')
+							  .addClass('ui-icon-home')
+							  .removeClass('ui-icon-arrow-l');
 			
 			$('#header .home').attr('href', '#home');
 			$('#header .home').trigger('create');
 			
+			/* Pre-handle the new hash and take actions accordingly. */
 			if (hash.startsWith('#course')) {
 			
+				/* Hash contains the course information, so load the course. */
 				coursePage = true;
 				NoppaCRA.loadCourse();
-				
-				/*$('#search').show();*/
 				$('#course').show();
-				/*$('#course').animate({
-					left: '0%'
-				}, 1000);*/
+			
 			} else if (hash == '#reviews') {
-				//
+			
+				/* Reviews view needs not to match the else option here. */
+			
 			} else if (hash != '') {
+			
+				/* Normally show the content div matching the hash. */
 				$(hash).show();
+			
 			} else {
+			
+				/* React to hash inconsistency by reloading the site. */
 				if (!NoppaCRA.fresh) {
 					location.reload(true);
 				} else {
+					/* On initial page load set the hash to #home. */
 					NoppaCRA.fresh = false;
 					window.location.hash = '#home';
 				}
 			}
 			
+			/* Yet some neurotic active class removal from navigation links. */
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
 				if (hash != $(this).attr('href')) {
 					$(this).removeClass('ui-btn-active');
 				}
 			});
 			
+			/* The backbone of the hash change function. */
+			
 			switch(hash) {
+			
+				/* Home view called. */
+				
 				case '#home':
 					$('.home').addClass('ui-btn-active');
 					break;
+				
+				/* Login view called. */
+				
 				case '#login':
 					$('.login').addClass('ui-btn-active');
+					
 					$('#logged-in-user').html('');
 					$('.login').attr('href', '#login');
-					$('.login').children('span').children('.ui-btn-text').text('Login');
+					$('.login').children('span').children('.ui-btn-text')
+							   .text('Login');
 					break;
+				
+				/* Courses view called. */
+				
 				case '#search':
-					//$('#pure-search ul').html();
-					//$('#pure-search ul').listview('refresh');
 					$('.search').addClass('ui-btn-active');
+					
+					/* Set the timeout for previously selected course blur. */
 					NoppaCRA.courseTimer = setTimeout(function() {
 						$('#search ul li').removeClass('ui-btn-active');
 					}, 1000);
+					
+					/* Call the refresh function for the courses view. */
 					if (NoppaCRA.searchRefresh) {
 						NoppaCRA.refreshSearch(NoppaCRA.filterRefresh);
 						NoppaCRA.searchRefresh = false;
 						searchRefresh = true;
-					} else {
+					} else { /* Otherwise set the previous scroll position. */
 						$('body').scrollTop(NoppaCRA.searchLastScrollTop);
 					}
+					
+					/* Call the refresh function for the filter and sort view. */
 					if (NoppaCRA.filterRefresh) {
 						NoppaCRA.refreshFilters(true);
 						NoppaCRA.filterRefresh = false;
 						searchRefresh = true;
 					}
+					
+					/* Set the blacklisted courses (hide their CSS classes). */
 					NoppaCRA.blacklist();
 					break;
+				
+				/* Search view called. */
+				
 				case '#pure-search':
-					//$('#search ul').html();
-					//$('#search ul').listview('refresh');
-					//NoppaCRA.searchRefresh = true;
 					$('.pure-search').addClass('ui-btn-active');
 					
+					/* Set the timeout for previously selected course blur. */
 					NoppaCRA.courseTimerPure = setTimeout(function() {
 						$('#pure-search ul li').removeClass('ui-btn-active');
 					}, 1000);
 					
+					/* Set the previous scroll position. */
 					$('body').scrollTop(NoppaCRA.searchLastScrollTopPure);
-					NoppaCRA.blacklist();
 					
+					/* Set the blacklisted courses (hide their CSS classes). */
+					NoppaCRA.blacklist();
 					break;
+				
+				/* Filter and sort view called. */
 				case '#filter':
 					$('.filter').addClass('ui-btn-active');
+					
+					/* Delayed variable affects the loading icon hiding time. */
 					var delayedBlacklist = false;
 					if (NoppaCRA.filterRefresh) {
 						filterRefresh = true;
-						NoppaCRA.refreshFilters();
+						NoppaCRA.refreshFilters(); // Refresh the content.
 						NoppaCRA.filterRefresh = false;
 						delayedBlacklist = true;
 					}
+					
+					/* Refresh the content of the actual blacklist in the UI. */
 					NoppaCRA.refreshBlacklist(delayedBlacklist);
 					break;
+				
+				/* Reviews view called. */
 				case '#reviews':
 					$('.login').addClass('ui-btn-active');
+					
 					reviewPage = true;
-					NoppaCRA.refreshReviews();
+					NoppaCRA.refreshReviews(); // Get the reviews page content.
 					break;
+				
+				/* Otherwise set just the fresh boolean to false. */
 				default:
 					NoppaCRA.fresh = false;
 					break;
 			}
 			
+			/* If no acute loading required, hide the loading icon. */
 			if (!searchRefresh && !coursePage && !filterRefresh && !reviewPage) {
 				$('.ui-loader').hide();
 			}
 			NoppaCRA.loading = false;
+		
 		});
 		
+		/* Bind rest of the events. */
 		NoppaCRA.initEvents();
 		NoppaCRA.ready = true;
 	
 	},
+	
+	
+	/* The function used to refresh the concrete blacklisting in the bottom of
+	   filter and sort view, where the user can remove courses from the list. */
 	
 	refreshBlacklist : function(delayedBlacklist) {
 	
@@ -233,6 +328,10 @@ var NoppaCRA = {
 		}
 	
 	},
+	
+	
+	/* The function used to refresh the list of user made reviews in the
+	   reviews view. Only effective when the user is logged in. */
 	
 	refreshReviews : function() {
 	
@@ -278,6 +377,10 @@ var NoppaCRA = {
 		);
 	
 	},
+	
+	
+	/* The function used to refresh faculties listing in the filter and
+	   sort view. Hierarchical ajax calls are made. */
 	
 	refreshFilters : function(callback) {
 	
@@ -352,6 +455,11 @@ var NoppaCRA = {
 	
 	},
 	
+	
+	/* The function used to refresh the course list of courses view. The 
+	   courses of each faculty are fetched once and for all. The faculties
+	   are selected based on the input values in the filter and sort view. */
+	
 	refreshSearch : function(callback) {
 	
 		$('.ui-loader').show();
@@ -380,6 +488,19 @@ var NoppaCRA = {
 		
 	},
 	
+	
+	/* Function for adding a single result for courses view.
+	
+	   code		-- course code
+	   name		-- course name
+	   grade	-- grade of the course
+	   
+	   scode	-- department code
+	   fcode	-- faculty code
+	   fname	-- faculty name
+	   
+	*/
+	
 	addResult : function(code, name, grade, scode, fcode, fname) {
 		var identifier = code.replace('.', '-').replace(',', '-');
 		$('#search ul').append('<li>' 
@@ -399,6 +520,16 @@ var NoppaCRA = {
 		
 		$('#search ul').listview('refresh');
 	},
+	
+	
+	/* Function for adding multiple results for courses view.
+	
+	   data		-- JSON containing the course details (name, code and grade)
+	   scode	-- department code
+	   fcode	-- faculty code
+	   fname	-- faculty name (appears in the user interface)
+	
+	*/
 	
 	addResults : function(data, scode, fcode, fname) {
 		var markup = '';
@@ -435,6 +566,16 @@ var NoppaCRA = {
 		$('#search ul').listview('refresh');
 	},
 	
+	
+	/* Function for adding multiple results for search view.
+	
+	   data		-- JSON containing the course details (name, code and grade)
+	   scode	-- department code
+	   fcode	-- faculty code
+	   fname	-- faculty name (appears in the user interface)
+	
+	*/
+	
 	addResultsPure : function(data, scode, fcode, fname) {
 		var markup = '';
 		var identifiers = new Array();
@@ -468,6 +609,9 @@ var NoppaCRA = {
 		
 		$('#pure-search ul').listview('refresh');
 	},
+	
+	
+	/* Function for loading course details into a course view. */
 	
 	loadCourse : function() {
 	
@@ -582,6 +726,9 @@ var NoppaCRA = {
 	
 	},
 	
+	
+	/* Function for loading reviews for a course view. */
+	
 	updateReviews : function() {
 	
 		var info = window.location.hash.split('+');
@@ -606,6 +753,9 @@ var NoppaCRA = {
 	
 	},
 	
+	
+	/* Function for hiding the blacklisted courses with CSS. */
+	
 	blacklist : function() {
 	
 		var previous = localStorage.getItem('blacklist');
@@ -620,6 +770,10 @@ var NoppaCRA = {
 		});
 	
 	},
+	
+	
+	/* Function used to bind the additional bindings during the
+	   initial page load. */
 	
 	initEvents : function() {
 	
@@ -955,6 +1109,9 @@ var NoppaCRA = {
 	}
 
 }
+
+
+/* The starting point for the JavaScript execution. */
 
 $(document).ready(function() {
 	NoppaCRA.init();
