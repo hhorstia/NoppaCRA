@@ -617,7 +617,6 @@ var NoppaCRA = {
 	
 		$('.ui-loader').show();
 		
-		// TODO
 		$('#header .home').data('icon', 'arrow-l').data('iconpos', '').data('mini', 'true');
 		$('#header .home').addClass('ui-mini').removeClass('ui-btn-icon-notext').addClass('ui-btn-icon-left');
 		
@@ -777,6 +776,8 @@ var NoppaCRA = {
 	
 	initEvents : function() {
 	
+		/* Bind courses view course link actions. */
+		
 		$('#search ul li a').live('click', function() {
 			NoppaCRA.fromPure = false;
 			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
@@ -801,11 +802,15 @@ var NoppaCRA = {
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
 		
+		/* Bind courses view course link CSS actions. */
+		
 		$('#search ul li a').live('mousedown', function() {
 			$('#search ul li').removeClass('ui-btn-active');
 			clearTimeout(NoppaCRA.courseTimer);
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
+		
+		/* Bind search view course link actions. */
 		
 		$('#pure-search ul li a').live('click', function() {
 			NoppaCRA.fromPure = true;
@@ -831,11 +836,16 @@ var NoppaCRA = {
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
 		
+		/* Bind search view course link CSS actions. */
+		
 		$('#pure-search ul li a').live('mousedown', function() {
 			$('#pure-search ul li').removeClass('ui-btn-active');
 			clearTimeout(NoppaCRA.courseTimerPure);
 			$(this).parent().parent().parent().addClass('ui-btn-active');
 		});
+		
+		/* Bind faculty selection change actions.
+		   (User changes selected faculties in filter and sort view.) */
 		
 		$('#filter input').live('change', function() {
 			var previous = localStorage.getItem('faculties');
@@ -852,6 +862,9 @@ var NoppaCRA = {
 			localStorage.setItem('faculties', previous);
 			NoppaCRA.searchRefresh = true;
 		});
+		
+		/* Bind username blur actions.
+		   (Check from the backend if username is reserved.) */
 		
 		$('#username').blur(function() {
 		
@@ -879,6 +892,8 @@ var NoppaCRA = {
 			return false;
 		
 		});
+		
+		/* Set the login and registration form submit actions. */
 		
 		$('#authenticate').submit(function(event) {
 		
@@ -937,13 +952,19 @@ var NoppaCRA = {
 			return false;
 		});
 		
+		/* Login button clicked. */
+		
 		$('#login-button').bind('click', function() {
 			NoppaCRA.loginButton = true;
 		});
 		
+		/* Register button clicked. */
+		
 		$('#register-button').bind('click', function() {
 			NoppaCRA.registerButton = true;
 		});
+		
+		/* Set the logout form submit actions. */
 		
 		$('#logout').submit(function(event) {
 		
@@ -970,6 +991,9 @@ var NoppaCRA = {
 			
 			return false;
 		});
+		
+		/* Set the review form submit actions.
+		   (User submits a review from a course details view.) */
 		
 		$('#review').submit(function() {
 		
@@ -998,6 +1022,8 @@ var NoppaCRA = {
 			return false;
 		
 		});
+		
+		/* Binds the actions for removing a review from the reviews view. */
 		
 		$('#reviews-holder .remove-button').live('click', function() {
 		
@@ -1030,6 +1056,9 @@ var NoppaCRA = {
 			return false;
 		});
 		
+		/* Binds the blacklisting actions for hiding a course from the course
+		   details view. */
+		
 		$('#course .hide-button').live('click', function() {
 			
 			var previous = localStorage.getItem('blacklist');
@@ -1048,6 +1077,9 @@ var NoppaCRA = {
 				window.location.hash = '#search';
 			}
 		});
+		
+		/* Binds the de-blacklisting actions for showing blacklisted courses
+		   from the filter and sort view. */
 		
 		$('#blacklist .show-button').live('click', function() {
 		
@@ -1073,6 +1105,8 @@ var NoppaCRA = {
 			$(this).parent().parent().parent().parent().remove();
 		});
 		
+		/* Bind the live search for the search view. */
+		
 		$('#pure-search input').live('keyup', function() {
 		
 			var thisHolder = $(this);
@@ -1096,11 +1130,15 @@ var NoppaCRA = {
 			}
 		});
 		
+		/* Bind the sort method change actions for the filter and sort view. */
+		
 		$('#sort').bind('change', function() {
 			localStorage.setItem('sort', $('#sort').val());
 			$('#pure-search input').keyup();
 			NoppaCRA.searchRefresh = true;
 		});
+		
+		/* Bind the additional search field clear actions for the search view. */
 		
 		$('#pure-search .ui-input-clear').live('click', function() {
 			$('#pure-search ul').html('');
