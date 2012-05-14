@@ -297,9 +297,11 @@ var NoppaCRA = {
 	
 	refreshBlacklist : function(delayedBlacklist) {
 	
+		/* Clear the blacklist in the view. */
 		$('#blacklist').html('');
 		$('#blacklist').trigger('create').listview('refresh');
 		
+		/* Get the previously blacklisted courses from the local storage. */
 		var blacklist = localStorage.getItem('blacklist');
 		if (!blacklist || blacklist == 'null' || typeof(blacklist) == 'null') {
 			blacklist = '';
@@ -310,6 +312,7 @@ var NoppaCRA = {
 			$('#blacklist').hide();
 		}
 		
+		/* Create the list markup and append it to the view. */
 		$.each(blacklist, function() {
 			var code = this;
 			if (code != '') {
@@ -321,6 +324,8 @@ var NoppaCRA = {
 			}
 		});
 		$('#blacklist').trigger('create').listview('refresh');
+		
+		/* Determine whether the blacklist needs to be shown. */
 		if (blacklist.length > 1 && !delayedBlacklist) {
 			$('#blacklist-heading').show();
 		} else {
@@ -337,6 +342,7 @@ var NoppaCRA = {
 	
 		$('#reviews').hide();
 		
+		/* Check whether the user is authenticated. */
 		$.post('auth/', { method: 'authenticated' },
 			function(data) {
 				if (data.value) {
@@ -350,6 +356,7 @@ var NoppaCRA = {
 			}, "json"
 		);
 		
+		/* Get the reviews made by the user, append to the view. */
 		$.post('auth/', { method: 'reviews' },
 			function(data) {
 				NoppaCRA.debug ? console.log(data) : '';
@@ -385,7 +392,8 @@ var NoppaCRA = {
 	refreshFilters : function(callback) {
 	
 		$('#filter .faculties').hide();
-	
+		
+		/* Get the schools from the backend. */
 		jQuery.ajax({
 			type: 'GET',
 			url: 'noppa/'
@@ -395,6 +403,7 @@ var NoppaCRA = {
 			var counter = 0;
 			var done = 0;
 			
+			/* Get the departmens from the backend. */
 			$.each(data, function() {
 				$('#filter .faculties').append(
 					'<div class="' + this.code + '" data-role="fieldcontain">' +
@@ -404,6 +413,7 @@ var NoppaCRA = {
 					
 				var scode = this.code;
 				
+				/* Get the faculties from the backend. */
 				jQuery.ajax({
 					type: 'GET',
 					url: 'noppa/' + this.code + '/?sort_by=name'
@@ -411,6 +421,8 @@ var NoppaCRA = {
 					NoppaCRA.debug ? console.log(data) : '';
 					NoppaCRA.debug ? console.log(scode) : '';
 					
+					/* Append the faculties, check from the local storage,
+					   whether should be checked as selected. */
 					$.each(data, function() {
 						var identifier = this.code.replace(',', '-').replace('.', '-');
 						var faculties = localStorage.getItem('faculties')
@@ -431,6 +443,7 @@ var NoppaCRA = {
 							'<label for="checkbox-' + identifier + '">' + this.name + '</label>');
 					});
 					
+					/* Refresh the sub-lists. */
 					$('#filter .faculties .' + scode).trigger('create');
 					
 					$('#filter .faculties').show();
@@ -466,6 +479,7 @@ var NoppaCRA = {
 		$('#search ul').html('').listview('refresh');
 		$('#search input').val('');
 		
+		/* Get the checked faculties and load courses for each. */
 		$('#filter input:checked').each(function() {
 			
 			var thisHolder = $(this);
@@ -481,6 +495,7 @@ var NoppaCRA = {
 			
 		});
 		
+		/* No faculties checked, append the info text. */
 		if ($('#filter input:checked').length == 0 && !callback) {
 			$('#search ul').html('<p class="search-info">Select interesting faculties from the settings page.</p>').listview('refresh');
 			$('.ui-loader').hide();
@@ -550,9 +565,12 @@ var NoppaCRA = {
 			}
 			grades.push(parseInt(this.grade) * 0.5);
 		});
+		
+		/* Include the faculty name. */
 		markup = '<li data-role="list-divider">' + fname + '</li>' + markup;
 		$('#search ul').append(markup).trigger('create');
 		
+		/* Set the star rating for each course applicable. */
 		$.each(identifiers, function(index, value) {
 			if (grades[index]) {
 				$(value).raty({
@@ -597,6 +615,7 @@ var NoppaCRA = {
 		});
 		$('#pure-search ul').append(markup).trigger('create');
 		
+		/* Set the star rating for each course applicable. */
 		$.each(identifiers, function(index, value) {
 			if (grades[index]) {
 				$(value).raty({
@@ -617,12 +636,14 @@ var NoppaCRA = {
 	
 		$('.ui-loader').show();
 		
+		/* Manually change the appearance of the home button to back button. */
 		$('#header .home').data('icon', 'arrow-l').data('iconpos', '').data('mini', 'true');
 		$('#header .home').addClass('ui-mini').removeClass('ui-btn-icon-notext').addClass('ui-btn-icon-left');
 		
 		$('#header .home').children('span').children('.ui-btn-text').html('Back');
 		$('#header .home').children('span').children('.ui-icon').removeClass('ui-icon-home').addClass('ui-icon-arrow-l');
 		
+		/* Set the back button view respectively to either search or courses view. */
 		if (NoppaCRA.fromPure) {
 			$('#header .home').attr('href', '#pure-search');
 		} else {
@@ -630,13 +651,15 @@ var NoppaCRA = {
 		}
 		$('#header .home').trigger('create');
 		
+		/* Some resetting of the view before loading the new content. */
 		$('#course .course-review, #course .course-reviews, #course .hide-course').hide();
 		$('#course .course-reviews-content').html('<span>No reviews.</span>');
 		var info = window.location.hash.split('+');
 		
 		$('#course .stars-header, #course .stars').hide();
 		$('#course .stars').html('');
-	
+		
+		/* Load and append the course details. */
 		jQuery.ajax({
 			type: 'GET',
 			url: 'noppa/' + info[1] + '/' + info[2] + '/' + info[3] + '/'
@@ -648,16 +671,20 @@ var NoppaCRA = {
 				var credits = null;
 				var period = null;
 				
+				/* Get the course credits. */
 				if (typeof(this.Any) != 'undefined') {
 					$('#course-credits').html(this.Any.text);
 					credits = this.Any;
 				}
+				
+				/* Get the course period. */
 				if (typeof(this.Any_2) != 'undefined') {
 					$('#course-period').html(this.Any_2.text);
 					period = this.Any_2;
 					$('#course-credits').width($('#course-code').width());
 				}
 				
+				/* Go through the other details. */
 				$.each(this, function() {
 					if (this != credits && this != period && this.heading != '' && typeof(this.heading) != 'undefined' && this.text != '' && typeof(this.text) != 'undefined') {
 						$('#course .course-details').append(
@@ -670,10 +697,13 @@ var NoppaCRA = {
 				$('#course .course-details').trigger('create');
 			});
 			
+			/* Set the defaults for the new rating. */
 			$('#rating').val(parseInt('5'));
 			$('#rating').selectmenu("refresh");
 			$('#comment').val('');
 			
+			/* Check whether the user is authenticated, show the review form.
+			   Pre-populate the form with old values if previously reviewed (the same course). */
 			if (NoppaCRA.authenticated) {
 			
 				$.post('auth/', { method: 'review', faculty: info[1], department: info[2], course: info[3] },
@@ -692,6 +722,7 @@ var NoppaCRA = {
 			
 			}
 			
+			/* Get all the course reviews regarding this course. */
 			$.post('auth/', { method: 'course', faculty: info[1], department: info[2], course: info[3] },
 				function(data) {
 					NoppaCRA.debug ? console.log(data.value) : '';
@@ -710,6 +741,7 @@ var NoppaCRA = {
 				}, "json"
 			);
 			
+			/* Set the overall grade (stars) of the course. */
 			if (parseInt($('#course .stars').data('grade')) != -1) {
 				$('#course .stars-header, #course .stars').show();
 				$('#course .stars').raty({
@@ -783,6 +815,7 @@ var NoppaCRA = {
 			NoppaCRA.searchLastScrollTop = $('body').scrollTop();
 			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTop) : '';
 			
+			/* Set the data from this view to the course details view. */
 			$('#course-code').html($(this).children('.code').html());
 			$('#course-name').html($(this).children('.name').html());
 			$('#course-credits, #course-period').html('');
@@ -793,7 +826,9 @@ var NoppaCRA = {
 				$('#course .stars').data('grade', -1);
 			}
 			
+			/* Set the hash. */
 			window.location.hash = $(this).attr('href');
+			
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
 				$(this).removeClass('ui-btn-active');
 			});
@@ -817,6 +852,7 @@ var NoppaCRA = {
 			NoppaCRA.searchLastScrollTopPure = $('body').scrollTop();
 			NoppaCRA.debug ? console.log(NoppaCRA.searchLastScrollTopPure) : '';
 			
+			/* Set the data from this view to the course details view. */
 			$('#course-code').html($(this).children('.code').html());
 			$('#course-name').html($(this).children('.name').html());
 			$('#course-credits, #course-period').html('');
@@ -827,7 +863,9 @@ var NoppaCRA = {
 				$('#course .stars').data('grade', -1);
 			}
 			
+			/* Set the hash. */
 			window.location.hash = $(this).attr('href');
+			
 			$('[data-role="header"] a, [data-role="navbar"] a').each(function() {
 				$(this).removeClass('ui-btn-active');
 			});
@@ -871,6 +909,8 @@ var NoppaCRA = {
 			var usernameString = $('#username').val();
 			if (usernameString != '') {
 				
+				/* If username is reserved, enable just the login button,
+				   otherwise enable just the register button. */
 				$.post('auth/', { method: 'reserved', username: usernameString },
 					function(data) {
 						NoppaCRA.debug ? console.log('Check for: ' + usernameString + ' ' + data.method + ' returns ' + data.value + '.') : '';
@@ -905,11 +945,13 @@ var NoppaCRA = {
 			var passwordHashObject;
 			var passwordHash;
 			
+			/* Hash the entered password with SHA-256. */
 			passwordHashObject = new jsSHA(passwordString);
 			passwordHash = passwordHashObject.getHash('SHA-256', 'HEX');
 			
 			if (usernameString != '' && passwordString != '') {
 				
+				/* Login button pressed, so login. */
 				if (NoppaCRA.loginButton) {
 				
 					$('.ui-loader').show();
@@ -928,6 +970,7 @@ var NoppaCRA = {
 						}, "json"
 					);
 					
+				/* Register button pressed, so register. */
 				} else if (NoppaCRA.registerButton) {
 				
 					$('.ui-loader').show();
@@ -974,6 +1017,7 @@ var NoppaCRA = {
 			
 			$('.ui-loader').show();
 			
+			/* Take the logout actions only if logout successful. */
 			$.post('auth/', { method: 'logout' },
 				function(data) {
 					NoppaCRA.debug ? console.log('Logout: ' + data.method + ' returns ' + data.value + '.') : '';
@@ -1069,6 +1113,8 @@ var NoppaCRA = {
 			previous = previous + $('#course-code').html() + ',';
 			$('.' + $('#course-code').html().replace('.', '-').replace(',', '-')).css('display', 'none');
 			NoppaCRA.debug ? console.log(previous) : '';
+			
+			/* Update the local storage. */
 			localStorage.setItem('blacklist', previous);
 			
 			if (NoppaCRA.fromPure) {
@@ -1100,6 +1146,8 @@ var NoppaCRA = {
 				$('.' + temp).show();
 			}
 			NoppaCRA.debug ? console.log(previous) : '';
+			
+			/* Update the local storage. */
 			localStorage.setItem('blacklist', previous);
 			
 			$(this).parent().parent().parent().parent().remove();
@@ -1117,6 +1165,8 @@ var NoppaCRA = {
 				if (NoppaCRA.pureXHR) {
 					NoppaCRA.pureXHR.abort();
 				}
+				
+				/* Save the XHR for cancellation if a newer search is done. */
 				NoppaCRA.pureXHR = jQuery.ajax({
 					type: 'GET',
 					url: 'search/' + $(this).val().replace(' ', '_') + '?sort_by=' + $('#sort').val()
